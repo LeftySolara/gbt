@@ -24,16 +24,22 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QStandardPaths>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    settings = new QSettings();
+    applyDefaultSettings();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete settings;
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -44,4 +50,14 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::on_actionAbout_Qt_triggered()
 {
     QApplication::aboutQt();
+}
+
+void MainWindow::applyDefaultSettings()
+{
+    QString data_path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+
+    settings->setValue("database/fileName", "games.sqlite");
+    settings->setValue("database/directory", data_path);
+    settings->setValue("log/fileName", "gbt.log");
+    settings->setValue("log/directory", data_path);
 }

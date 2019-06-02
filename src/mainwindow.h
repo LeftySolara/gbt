@@ -25,6 +25,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -43,7 +44,10 @@ private slots:
     void on_actionAbout_Qt_triggered();
 
 private:
+    void applyDefaultSettings();
+
     Ui::MainWindow *ui;
+    QSettings *settings;
 };
 
 #endif // MAINWINDOW_H

@@ -27,6 +27,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QCoreApplication::setOrganizationName("Jalen K Adams");
+    QCoreApplication::setOrganizationDomain("jalenkadams.me");
+    QCoreApplication::setApplicationName("gbt");
+
     MainWindow w;
     w.show();
 
