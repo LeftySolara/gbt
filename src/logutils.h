@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.cpp : functionality for the main window UI
+ * logutils.h : functions for logging
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,47 +21,17 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "logutils.h"
+#ifndef LOGUTILS_H
+#define LOGUTILS_H
 
+#include <QApplication>
 #include <QStandardPaths>
+#include <QFile>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+namespace LogUtils
 {
-    ui->setupUi(this);
-
-    LogUtils::initLogging();
-
-    settings = new QSettings();
-    applyDefaultSettings();
-
+    bool initLogging();
+    void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-    delete settings;
-}
-
-void MainWindow::on_actionQuit_triggered()
-{
-    QApplication::exit();
-}
-
-void MainWindow::on_actionAbout_Qt_triggered()
-{
-    QApplication::aboutQt();
-}
-
-void MainWindow::applyDefaultSettings()
-{
-    QString data_path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-
-    settings->setValue("database/fileName", "games.sqlite");
-    settings->setValue("database/directory", data_path);
-    settings->setValue("log/fileName", "gbt.log");
-    settings->setValue("log/directory", data_path);
-}
+#endif // LOGUTILS_H

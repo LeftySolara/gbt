@@ -29,10 +29,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        src/logutils.cpp \
         src/main.cpp \
         src/mainwindow.cpp
 
 HEADERS += \
+        src/logutils.h \
         src/mainwindow.h
 
 FORMS += \
