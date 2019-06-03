@@ -44,6 +44,11 @@ private slots:
     void on_actionAbout_Qt_triggered();
 
 private:
+    bool isFirstRun();
+
+    bool settingsFileExists();
+    bool databaseFileExists();
+
     void applyDefaultSettings();
 
     Ui::MainWindow *ui;

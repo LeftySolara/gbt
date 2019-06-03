@@ -26,18 +26,20 @@
 #include "logutils.h"
 
 #include <QStandardPaths>
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     LogUtils::initLogging();
 
     settings = new QSettings();
-    applyDefaultSettings();
+    bool first_run = isFirstRun();
 
+    if (first_run)
+        applyDefaultSettings();
 }
 
 MainWindow::~MainWindow()
@@ -54,6 +56,29 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::on_actionAbout_Qt_triggered()
 {
     QApplication::aboutQt();
+}
+
+bool MainWindow::isFirstRun()
+{
+    return (!settingsFileExists() && !databaseFileExists());
+}
+
+bool MainWindow::settingsFileExists()
+{
+    QFile settings_file(settings->fileName());
+    return settings_file.exists();
+}
+
+bool MainWindow::databaseFileExists()
+{
+    if (!settingsFileExists())
+        return false;
+
+    QString db_path = settings->value("database/directory").toString() +
+            "/" + settings->value("database/fileName").toString();
+    QFile db_file(db_path);
+
+    return db_file.exists();
 }
 
 void MainWindow::applyDefaultSettings()
