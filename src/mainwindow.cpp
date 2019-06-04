@@ -35,52 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     settings = new QSettings();
-    bool first_run = isFirstRun();
 
-    if (first_run)
+    if (!settingsFileExists())
         applyDefaultSettings();
 
     LogUtils::initLogging();
-
-    QString database_path = settings->value("database/directory").toString() +
-            "/" + settings->value("database/fileName").toString();
-
-    database = QSqlDatabase::addDatabase("QSQLITE");
-    database.setDatabaseName(database_path);
-
-    if (!database.open()) {
-        qCritical("Error: could not open database.");
-        return;
-    }
-
-    model = new GamesDatabaseModel(nullptr, database);
-
-    if (first_run) {
-        // Create the database schema and populate tables.
-        // If a debug build is running, populate the database with sample data.
-        QString init_script_path;
-        #ifdef QT_DEBUG
-            init_script_path = "../../gbt/scripts/init_db_sample_data.sql";
-        #else
-            init_script_path = "../../gbt/scripts/init_db.sql";
-        #endif
-
-        if (model->executeSqlScript(init_script_path))
-            qInfo("Successfully created and initialized database.");
-        else {
-            qCritical("Error: failed to create database.");
-            return;
-        }
-    }
-
-    model->setTable("games");
-    model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
-    model->setRelation(2, QSqlRelation("status", "id", "name"));
-    model->setRelation(3, QSqlRelation("series", "id", "name"));
-    model->setHeaderData(1, Qt::Horizontal, "Title");
-    model->setHeaderData(2, Qt::Horizontal, "Status");
-    model->setHeaderData(3, Qt::Horizontal, "Series");
-    model->select();
+    initializeDatabaseModel();
 
     table_view = ui->tableView;
     table_view->setModel(model);
@@ -137,4 +97,58 @@ void MainWindow::applyDefaultSettings()
     settings->setValue("database/directory", data_path);
     settings->setValue("log/fileName", "gbt.log");
     settings->setValue("log/directory", data_path);
+}
+
+bool MainWindow::initializeDatabaseModel()
+{
+    bool creating_new_database = !databaseFileExists();
+    QString database_path = settings->value("database/directory").toString() +
+            "/" + settings->value("database/fileName").toString();
+
+    if (creating_new_database) {
+        qInfo("No database file found. Attempting to create...");
+
+        QFile database_file(database_path);
+        database_file.open(QIODevice::ReadWrite);
+        database_file.close();
+    }
+
+    database = QSqlDatabase::addDatabase("QSQLITE");
+    database.setDatabaseName(database_path);
+
+    if (!database.open()) {
+        qCritical("Error: could not open database.");
+        return false;
+    }
+
+    model = new GamesDatabaseModel(nullptr, database);
+
+    if (creating_new_database) {
+
+        // If a debug build is running, populate the database with sample data.
+        QString init_script_path;
+        #ifdef QT_DEBUG
+            init_script_path = "../../gbt/scripts/init_db_sample_data.sql";
+        #else
+            init_script_path = "../../gbt/scripts/init_db.sql";
+        #endif
+
+        if (model->executeSqlScript(init_script_path))
+            qInfo("Successfully created and initialized database.");
+        else {
+            qCritical("Error: failed to create database.");
+            return false;
+        }
+    }
+
+    model->setTable("games");
+    model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
+    model->setRelation(2, QSqlRelation("status", "id", "name"));
+    model->setRelation(3, QSqlRelation("series", "id", "name"));
+    model->setHeaderData(1, Qt::Horizontal, "Title");
+    model->setHeaderData(2, Qt::Horizontal, "Status");
+    model->setHeaderData(3, Qt::Horizontal, "Series");
+    model->select();
+
+    return true;
 }

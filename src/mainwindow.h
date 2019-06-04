@@ -54,6 +54,7 @@ private:
     bool databaseFileExists();
 
     void applyDefaultSettings();
+    bool initializeDatabaseModel();
 
     Ui::MainWindow *ui;
     QSettings *settings;
