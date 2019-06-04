@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : functionality for the main window UI
+ * gamesdatabasemodel.h : data model for the games database
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,48 +21,18 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef GAMESDATABASEMODEL_H
+#define GAMESDATABASEMODEL_H
 
-#include "gamesdatabasemodel.h"
+#include <QSqlRelationalTableModel>
 
-#include <QMainWindow>
-#include <QSettings>
-#include <QSqlDatabase>
-#include <QTableView>
-
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class GamesDatabaseModel : public QSqlRelationalTableModel
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-private:
-    bool isFirstRun();
-
-    bool settingsFileExists();
-    bool databaseFileExists();
-
-    void applyDefaultSettings();
-    bool executeSqlScript(QString script_path);
-
-    Ui::MainWindow *ui;
-    QSettings *settings;
-
-    QSqlDatabase database;
-    GamesDatabaseModel *model;
-
-    QTableView *table_view;
+    explicit GamesDatabaseModel(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 };
 
-#endif // MAINWINDOW_H
+#endif // GAMESDATABASEMODEL_H

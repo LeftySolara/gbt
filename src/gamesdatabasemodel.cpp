@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : functionality for the main window UI
+ * gamesdatabasemodel.cpp : data model for the games database
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,48 +21,17 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 #include "gamesdatabasemodel.h"
 
-#include <QMainWindow>
-#include <QSettings>
-#include <QSqlDatabase>
-#include <QTableView>
-
-namespace Ui {
-class MainWindow;
+GamesDatabaseModel::GamesDatabaseModel(QObject *parent, QSqlDatabase db)
+    : QSqlRelationalTableModel(parent)
+{
 }
 
-class MainWindow : public QMainWindow
+QVariant GamesDatabaseModel::data(const QModelIndex &index, int role) const
 {
-    Q_OBJECT
+    if (!index.isValid())
+        return QVariant();
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-private:
-    bool isFirstRun();
-
-    bool settingsFileExists();
-    bool databaseFileExists();
-
-    void applyDefaultSettings();
-    bool executeSqlScript(QString script_path);
-
-    Ui::MainWindow *ui;
-    QSettings *settings;
-
-    QSqlDatabase database;
-    GamesDatabaseModel *model;
-
-    QTableView *table_view;
-};
-
-#endif // MAINWINDOW_H
+    return QSqlRelationalTableModel::data(index, role);
+}

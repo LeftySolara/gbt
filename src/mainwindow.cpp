@@ -73,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     }
 
-    model = new QSqlRelationalTableModel(nullptr, database);
+    model = new GamesDatabaseModel(nullptr, database);
 
     model->setTable("games");
     model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
