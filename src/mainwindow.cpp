@@ -25,8 +25,7 @@
 #include "ui_mainwindow.h"
 #include "logutils.h"
 #include "dbutils.h"
-
-#include <QStandardPaths>
+#include "settings.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,10 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    settings = new QSettings();
-
-    if (!settingsFileExists())
-        applyDefaultSettings();
+    if (!Settings::settingsFileExists())
+        Settings::applyDefaultSettings();
 
     LogUtils::initLogging();
     initializeDatabaseModel();
@@ -52,7 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete settings;
     delete model;
 }
 
@@ -68,23 +64,7 @@ void MainWindow::on_actionAbout_Qt_triggered()
 
 bool MainWindow::isFirstRun()
 {
-    return (!settingsFileExists() && !DBUtils::databaseFileExists());
-}
-
-bool MainWindow::settingsFileExists()
-{
-    QFile settings_file(settings->fileName());
-    return settings_file.exists();
-}
-
-void MainWindow::applyDefaultSettings()
-{
-    QString data_path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-
-    settings->setValue("database/fileName", "games.sqlite");
-    settings->setValue("database/directory", data_path);
-    settings->setValue("log/fileName", "gbt.log");
-    settings->setValue("log/directory", data_path);
+    return (!Settings::settingsFileExists() && !DBUtils::databaseFileExists());
 }
 
 bool MainWindow::initializeDatabaseModel()

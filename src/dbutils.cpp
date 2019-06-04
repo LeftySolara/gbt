@@ -22,30 +22,21 @@
  ***************************************************************************/
 
 #include "dbutils.h"
+#include "settings.h"
 
-#include <QSettings>
 #include <QFile>
 #include <QTextStream>
 #include <QSqlQuery>
 
 bool DBUtils::databaseFileExists()
 {
-    QSettings settings;
-
-    QString db_path = settings.value("database/directory").toString() +
-            "/" + settings.value("database/fileName").toString();
-    QFile db_file(db_path);
-
-    return db_file.exists();
+    QFile database_file(Settings::getDatabasePath());
+    return database_file.exists();
 }
 
 bool DBUtils::createDatabaseFile()
 {
-    QSettings settings;
-    QString database_path = settings.value("database/directory").toString() +
-            "/" + settings.value("database/fileName").toString();
-
-    QFile database_file(database_path);
+    QFile database_file(Settings::getDatabasePath());
     database_file.open(QIODevice::ReadWrite);
     database_file.close();
 
@@ -70,6 +61,15 @@ bool DBUtils::createDatabaseSchema()
     }
 
     return true;
+}
+
+QSqlDatabase DBUtils::initializeDatabaseConnection()
+{
+    QSqlDatabase database;
+    database = QSqlDatabase::addDatabase("QSQLITE");
+    database.setDatabaseName(Settings::getDatabasePath());
+
+    return database;
 }
 
 bool DBUtils::executeSqlScript(QString script_path)
@@ -103,15 +103,3 @@ bool DBUtils::executeSqlScript(QString script_path)
     return true;
 }
 
-QSqlDatabase DBUtils::initializeDatabaseConnection()
-{
-    QSettings settings;
-    QString database_path = settings.value("database/directory").toString() +
-            "/" + settings.value("database/fileName").toString();
-
-    QSqlDatabase database;
-    database = QSqlDatabase::addDatabase("QSQLITE");
-    database.setDatabaseName(database_path);
-
-    return database;
-}

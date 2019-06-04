@@ -33,13 +33,15 @@ SOURCES += \
         src/gamesdatabasemodel.cpp \
         src/logutils.cpp \
         src/main.cpp \
-        src/mainwindow.cpp
+        src/mainwindow.cpp \
+        src/settings.cpp
 
 HEADERS += \
         src/dbutils.h \
         src/gamesdatabasemodel.h \
         src/logutils.h \
-        src/mainwindow.h
+        src/mainwindow.h \
+        src/settings.h
 
 FORMS += \
         src/mainwindow.ui

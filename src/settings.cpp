@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : functionality for the main window UI
+ * settings.h : helper functions for dealing with program configuration
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,41 +21,33 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "settings.h"
 
-#include "gamesdatabasemodel.h"
+#include <QSettings>
+#include <QStandardPaths>
+#include <QFile>
 
-#include <QMainWindow>
-#include <QSqlDatabase>
-#include <QTableView>
-
-namespace Ui {
-class MainWindow;
+QString Settings::getDatabasePath()
+{
+    QSettings settings;
+    return settings.value("database/directory").toString() + "/"
+           + settings.value("database/fileName").toString();
 }
 
-class MainWindow : public QMainWindow
+void Settings::applyDefaultSettings()
 {
-    Q_OBJECT
+    QSettings settings;
+    QString data_path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    settings.setValue("database/fileName", "games.sqlite");
+    settings.setValue("database/directory", data_path);
+    settings.setValue("log/fileName", "gbt.log");
+    settings.setValue("log/directory", data_path);
+}
 
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-private:
-    bool isFirstRun();
-    bool initializeDatabaseModel();
-
-    Ui::MainWindow *ui;
-
-    QSqlDatabase database;
-    GamesDatabaseModel *model;
-
-    QTableView *table_view;
-};
-
-#endif // MAINWINDOW_H
+bool Settings::settingsFileExists()
+{
+    QSettings settings;
+    QFile settings_file(settings.fileName());
+    return settings_file.exists();
+}

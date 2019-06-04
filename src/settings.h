@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : functionality for the main window UI
+ * settings.h : helper functions for dealing with program configuration
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,41 +21,17 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-#include "gamesdatabasemodel.h"
+#include <QString>
 
-#include <QMainWindow>
-#include <QSqlDatabase>
-#include <QTableView>
+namespace Settings {
 
-namespace Ui {
-class MainWindow;
+bool settingsFileExists();
+QString getDatabasePath();
+void applyDefaultSettings();
+
 }
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-private:
-    bool isFirstRun();
-    bool initializeDatabaseModel();
-
-    Ui::MainWindow *ui;
-
-    QSqlDatabase database;
-    GamesDatabaseModel *model;
-
-    QTableView *table_view;
-};
-
-#endif // MAINWINDOW_H
+#endif // SETTINGS_H
