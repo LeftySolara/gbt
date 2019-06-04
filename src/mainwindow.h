@@ -26,6 +26,7 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QSqlDatabase>
 #include <QSqlRelationalTableModel>
 #include <QTableView>
 
@@ -52,6 +53,7 @@ private:
     bool databaseFileExists();
 
     void applyDefaultSettings();
+    bool executeSqlScript(QString script_path);
 
     Ui::MainWindow *ui;
     QSettings *settings;
