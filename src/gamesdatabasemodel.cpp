@@ -23,6 +23,10 @@
 
 #include "gamesdatabasemodel.h"
 
+#include <QFile>
+#include <QSqlQuery>
+#include <QTextStream>
+
 GamesDatabaseModel::GamesDatabaseModel(QObject *parent, QSqlDatabase db)
     : QSqlRelationalTableModel(parent)
 {
@@ -34,4 +38,35 @@ QVariant GamesDatabaseModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     return QSqlRelationalTableModel::data(index, role);
+}
+
+bool GamesDatabaseModel::executeSqlScript(QString script_path)
+{
+    QFile script(script_path);
+    if (!script.open(QIODevice::ReadOnly))
+        return false;
+
+    QString line;
+    QString sql_statement = "";
+    QTextStream stream(&script);
+    QSqlQuery query;
+
+    while (!stream.atEnd()) {
+        line = stream.readLine();
+        if (line.startsWith("--") || line.length() == 0) // ignore comments
+            continue;
+
+        sql_statement += line;
+        if (sql_statement.endsWith(";")) {
+            sql_statement.chop(1);  // remove trailing semicolon
+            if (query.prepare(sql_statement)) {
+                query.exec();
+                sql_statement = "";
+            }
+            else
+                return false;
+        }
+    }
+    script.close();
+    return true;
 }

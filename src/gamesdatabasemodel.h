@@ -33,6 +33,8 @@ class GamesDatabaseModel : public QSqlRelationalTableModel
 public:
     explicit GamesDatabaseModel(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    bool executeSqlScript(QString script_path);
 };
 
 #endif // GAMESDATABASEMODEL_H

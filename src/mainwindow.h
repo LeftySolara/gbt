@@ -54,7 +54,6 @@ private:
     bool databaseFileExists();
 
     void applyDefaultSettings();
-    bool executeSqlScript(QString script_path);
 
     Ui::MainWindow *ui;
     QSettings *settings;

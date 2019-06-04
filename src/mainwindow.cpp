@@ -25,9 +25,7 @@
 #include "ui_mainwindow.h"
 #include "logutils.h"
 
-#include <QSqlQuery>
 #include <QStandardPaths>
-#include <QTextStream>
 #include <QFile>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -55,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
         return;
     }
 
+    model = new GamesDatabaseModel(nullptr, database);
+
     if (first_run) {
         // Create the database schema and populate tables.
         // If a debug build is running, populate the database with sample data.
@@ -65,15 +65,13 @@ MainWindow::MainWindow(QWidget *parent) :
             init_script_path = "../../gbt/scripts/init_db.sql";
         #endif
 
-        if (executeSqlScript(init_script_path))
+        if (model->executeSqlScript(init_script_path))
             qInfo("Successfully created and initialized database.");
         else {
             qCritical("Error: failed to create database.");
             return;
         }
     }
-
-    model = new GamesDatabaseModel(nullptr, database);
 
     model->setTable("games");
     model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
@@ -139,35 +137,4 @@ void MainWindow::applyDefaultSettings()
     settings->setValue("database/directory", data_path);
     settings->setValue("log/fileName", "gbt.log");
     settings->setValue("log/directory", data_path);
-}
-
-bool MainWindow::executeSqlScript(QString script_path)
-{
-    QFile script(script_path);
-    if (!script.open(QIODevice::ReadOnly))
-        return false;
-
-    QString line;
-    QString sql_statement = "";
-    QTextStream stream(&script);
-    QSqlQuery query;
-
-    while (!stream.atEnd()) {
-        line = stream.readLine();
-        if (line.startsWith("--") || line.length() == 0) // ignore comments
-            continue;
-
-        sql_statement += line;
-        if (sql_statement.endsWith(";")) {
-            sql_statement.chop(1);  // remove trailing semicolon
-            if (query.prepare(sql_statement)) {
-                query.exec();
-                sql_statement = "";
-            }
-            else
-                return false;
-        }
-    }
-    script.close();
-    return true;
 }
