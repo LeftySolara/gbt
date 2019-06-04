@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : functionality for the main window UI
+ * dbutils.h : helper functions for database handling
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,47 +21,20 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef DBUTILS_H
+#define DBUTILS_H
 
-#include "gamesdatabasemodel.h"
-
-#include <QMainWindow>
-#include <QSettings>
 #include <QSqlDatabase>
-#include <QTableView>
 
-namespace Ui {
-class MainWindow;
+namespace DBUtils {
+
+bool databaseFileExists();
+
+bool createDatabaseFile();
+bool createDatabaseSchema();
+QSqlDatabase initializeDatabaseConnection();
+
+bool executeSqlScript(QString script_path);
 }
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-private:
-    bool isFirstRun();
-
-    bool settingsFileExists();
-
-    void applyDefaultSettings();
-    bool initializeDatabaseModel();
-
-    Ui::MainWindow *ui;
-    QSettings *settings;
-
-    QSqlDatabase database;
-    GamesDatabaseModel *model;
-
-    QTableView *table_view;
-};
-
-#endif // MAINWINDOW_H
+#endif // DBUTILS_H

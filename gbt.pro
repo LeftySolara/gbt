@@ -29,12 +29,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        src/dbutils.cpp \
         src/gamesdatabasemodel.cpp \
         src/logutils.cpp \
         src/main.cpp \
         src/mainwindow.cpp
 
 HEADERS += \
+        src/dbutils.h \
         src/gamesdatabasemodel.h \
         src/logutils.h \
         src/mainwindow.h
