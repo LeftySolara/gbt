@@ -26,6 +26,8 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QSqlRelationalTableModel>
+#include <QTableView>
 
 namespace Ui {
 class MainWindow;
@@ -53,6 +55,11 @@ private:
 
     Ui::MainWindow *ui;
     QSettings *settings;
+
+    QSqlDatabase database;
+    QSqlRelationalTableModel *model;
+
+    QTableView *table_view;
 };
 
 #endif // MAINWINDOW_H

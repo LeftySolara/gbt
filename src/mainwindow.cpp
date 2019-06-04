@@ -40,12 +40,42 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if (first_run)
         applyDefaultSettings();
+
+
+    QString database_path = settings->value("database/directory").toString() +
+            "/" + settings->value("database/fileName").toString();
+
+    database = QSqlDatabase::addDatabase("QSQLITE");
+    database.setDatabaseName(database_path);
+
+    if (!database.open()) {
+        qCritical("Error: could not open database.");
+        return;
+    }
+
+    model = new QSqlRelationalTableModel(nullptr, database);
+
+    model->setTable("games");
+    model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
+    model->setRelation(2, QSqlRelation("status", "id", "name"));
+    model->setRelation(3, QSqlRelation("series", "id", "name"));
+    model->setHeaderData(1, Qt::Horizontal, "Title");
+    model->setHeaderData(2, Qt::Horizontal, "Status");
+    model->setHeaderData(3, Qt::Horizontal, "Series");
+    model->select();
+
+    table_view = ui->tableView;
+    table_view->setModel(model);
+    table_view->hideColumn(0);
+    table_view->resizeRowsToContents();
+    table_view->resizeColumnsToContents();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete settings;
+    delete model;
 }
 
 void MainWindow::on_actionQuit_triggered()
