@@ -54,6 +54,9 @@ private:
     bool databaseFileExists();
 
     void applyDefaultSettings();
+    void createDatabaseFile();
+    bool createDatabaseSchema();
+    bool initializeDatabaseConnection();
     bool initializeDatabaseModel();
 
     Ui::MainWindow *ui;

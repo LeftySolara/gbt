@@ -89,6 +89,36 @@ bool MainWindow::databaseFileExists()
     return db_file.exists();
 }
 
+void MainWindow::createDatabaseFile()
+{
+    QString database_path = settings->value("database/directory").toString() +
+            "/" + settings->value("database/fileName").toString();
+
+    QFile database_file(database_path);
+    database_file.open(QIODevice::ReadWrite);
+    database_file.close();
+}
+
+bool MainWindow::createDatabaseSchema()
+{
+    // If a debug build is running, populate the database with sample data.
+    QString init_script_path;
+    #ifdef QT_DEBUG
+        init_script_path = "../../gbt/scripts/init_db_sample_data.sql";
+    #else
+        init_script_path = "../../gbt/scripts/init_db.sql";
+    #endif
+
+    if (model->executeSqlScript(init_script_path))
+        qInfo("Successfully created and initialized database.");
+    else {
+        qCritical("Error: failed to create database.");
+        return false;
+    }
+
+    return true;
+}
+
 void MainWindow::applyDefaultSettings()
 {
     QString data_path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
@@ -99,47 +129,34 @@ void MainWindow::applyDefaultSettings()
     settings->setValue("log/directory", data_path);
 }
 
-bool MainWindow::initializeDatabaseModel()
+bool MainWindow::initializeDatabaseConnection()
 {
-    bool creating_new_database = !databaseFileExists();
     QString database_path = settings->value("database/directory").toString() +
             "/" + settings->value("database/fileName").toString();
-
-    if (creating_new_database) {
-        qInfo("No database file found. Attempting to create...");
-
-        QFile database_file(database_path);
-        database_file.open(QIODevice::ReadWrite);
-        database_file.close();
-    }
 
     database = QSqlDatabase::addDatabase("QSQLITE");
     database.setDatabaseName(database_path);
 
-    if (!database.open()) {
-        qCritical("Error: could not open database.");
+    return database.open();
+}
+
+bool MainWindow::initializeDatabaseModel()
+{
+    bool creating_new_database = !databaseFileExists();
+    if (creating_new_database) {
+        qInfo("No database file found. Attempting to create...");
+        createDatabaseFile();
+    }
+
+    if (!initializeDatabaseConnection()) {
+        qCritical("Error: could not connect to database.");
         return false;
     }
 
     model = new GamesDatabaseModel(nullptr, database);
 
-    if (creating_new_database) {
-
-        // If a debug build is running, populate the database with sample data.
-        QString init_script_path;
-        #ifdef QT_DEBUG
-            init_script_path = "../../gbt/scripts/init_db_sample_data.sql";
-        #else
-            init_script_path = "../../gbt/scripts/init_db.sql";
-        #endif
-
-        if (model->executeSqlScript(init_script_path))
-            qInfo("Successfully created and initialized database.");
-        else {
-            qCritical("Error: failed to create database.");
-            return false;
-        }
-    }
+    if (creating_new_database)
+        createDatabaseSchema();
 
     model->setTable("games");
     model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
