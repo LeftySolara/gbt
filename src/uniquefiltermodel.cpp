@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : functionality for the main window UI
+ * uniquefiltermodel.cpp : filter for removing duplicate items from combo boxes
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,43 +21,26 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "uniquefiltermodel.h"
 
-#include "gamesdatabasemodel.h"
-
-#include <QMainWindow>
-#include <QSqlDatabase>
-#include <QTableView>
-
-namespace Ui {
-class MainWindow;
+UniqueFilterModel::UniqueFilterModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
+{
+    unique_rows = new QStringList;
 }
 
-class MainWindow : public QMainWindow
+UniqueFilterModel::~UniqueFilterModel()
 {
-    Q_OBJECT
+    delete unique_rows;
+}
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-    void on_actionAdd_Game_triggered();
-
-private:
-    bool isFirstRun();
-    bool initializeDatabaseModel();
-
-    Ui::MainWindow *ui;
-
-    QSqlDatabase database;
-    GamesDatabaseModel *model;
-
-    QTableView *table_view;
-};
-
-#endif // MAINWINDOW_H
+bool UniqueFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+{
+    QModelIndex index = sourceModel()->index(source_row, filterKeyColumn(), source_parent);
+    QString data = index.data().toString();
+    if (!unique_rows->contains(data)) {
+        unique_rows->append(data);
+        return true;
+    }
+    return false;
+}

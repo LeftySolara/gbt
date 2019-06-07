@@ -26,6 +26,7 @@
 #include "logutils.h"
 #include "dbutils.h"
 #include "settings.h"
+#include "dialogaddgame.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -60,6 +61,14 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::on_actionAbout_Qt_triggered()
 {
     QApplication::aboutQt();
+}
+
+void MainWindow::on_actionAdd_Game_triggered()
+{
+    DialogAddGame dialog(nullptr, model);
+
+    if (!dialog.exec())
+        return;
 }
 
 bool MainWindow::isFirstRun()

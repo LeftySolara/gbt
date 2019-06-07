@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : functionality for the main window UI
+ * uniquefiltermodel.h : filter for removing duplicate items from combo boxes
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,43 +21,22 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef UNIQUEFILTERMODEL_H
+#define UNIQUEFILTERMODEL_H
 
-#include "gamesdatabasemodel.h"
+#include <QSortFilterProxyModel>
 
-#include <QMainWindow>
-#include <QSqlDatabase>
-#include <QTableView>
-
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+class UniqueFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-    void on_actionAdd_Game_triggered();
+    explicit UniqueFilterModel(QObject *parent = nullptr);
+    ~UniqueFilterModel() override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
 private:
-    bool isFirstRun();
-    bool initializeDatabaseModel();
-
-    Ui::MainWindow *ui;
-
-    QSqlDatabase database;
-    GamesDatabaseModel *model;
-
-    QTableView *table_view;
+    QStringList *unique_rows;
 };
 
-#endif // MAINWINDOW_H
+#endif // UNIQUEFILTERMODEL_H

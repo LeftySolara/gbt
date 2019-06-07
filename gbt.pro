@@ -30,20 +30,25 @@ CONFIG += c++11
 
 SOURCES += \
         src/dbutils.cpp \
+        src/dialogaddgame.cpp \
         src/gamesdatabasemodel.cpp \
         src/logutils.cpp \
         src/main.cpp \
         src/mainwindow.cpp \
-        src/settings.cpp
+        src/settings.cpp \
+        src/uniquefiltermodel.cpp
 
 HEADERS += \
         src/dbutils.h \
+        src/dialogaddgame.h \
         src/gamesdatabasemodel.h \
         src/logutils.h \
         src/mainwindow.h \
-        src/settings.h
+        src/settings.h \
+        src/uniquefiltermodel.h
 
 FORMS += \
+        src/dialogaddgame.ui \
         src/mainwindow.ui
 
 # Default rules for deployment.
