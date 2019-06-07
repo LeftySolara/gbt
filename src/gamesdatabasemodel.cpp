@@ -25,6 +25,7 @@
 
 #include <QFile>
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QTextStream>
 
 GamesDatabaseModel::GamesDatabaseModel(QObject *parent, QSqlDatabase db)
@@ -38,4 +39,76 @@ QVariant GamesDatabaseModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     return QSqlRelationalTableModel::data(index, role);
+}
+
+int GamesDatabaseModel::getSeriesID(QString series)
+{
+    QSqlQuery query(database());
+    QString query_string = "SELECT * FROM series WHERE name = '" + series + "'";
+    query.exec(query_string);
+
+    if (query.next()) {
+        int id = query.value(0).toInt();
+        int next_id = getNextSeriesID();
+
+        if (id >= next_id) // Series doesn't exist
+            return -1;
+        else
+            return id;
+    }
+
+    return -1;
+}
+
+int GamesDatabaseModel::getNextSeriesID()
+{
+    QSqlQuery query(database());
+    query.exec("SELECT * FROM SQLITE_SEQUENCE WHERE name = 'series'");
+
+    if (query.next())
+        return query.value(1).toInt();
+    else
+        return -1;
+}
+
+bool GamesDatabaseModel::hasSeries(QString series)
+{
+    return getSeriesID(series) >= 0;
+}
+
+bool GamesDatabaseModel::addSeries(QString series)
+{
+    if (hasSeries(series))
+        return false;
+
+    QSqlQuery query(database());
+    QString query_string = "INSERT INTO series (name) VALUES ('" + series + "')";
+    query.exec(query_string);
+
+    return hasSeries(series);
+}
+
+bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
+{
+    QSqlQuery query(database());
+    QString query_string;
+
+    if (series_id >= 0)
+        query_string = "INSERT INTO games (name, status_id, series_id) "
+                       "VALUES (:name, :status_id, :series_id)";
+    else
+        query_string = "INSERT INTO games (name, status_id) "
+                       "VALUES (:name, :status_id)";
+
+    query.prepare(query_string);
+    query.bindValue(":name", title);
+    query.bindValue(":status_id", status_id);
+    if (series_id >= 0)
+        query.bindValue(":series_id", series_id);
+
+    query.exec();
+    if (query.lastError().type() == QSqlError::NoError)
+        return true;
+
+    return false;
 }

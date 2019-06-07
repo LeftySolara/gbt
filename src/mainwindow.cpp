@@ -69,6 +69,17 @@ void MainWindow::on_actionAdd_Game_triggered()
 
     if (!dialog.exec())
         return;
+
+    QString title = dialog.line_edit_title->text();
+    QString series = dialog.line_edit_series->text();
+    int status_id = dialog.combo_box_status->currentIndex();
+    int series_id = model->getSeriesID(series);
+
+    if (series_id == -1 && !series.isEmpty())
+        model->addSeries(series);
+
+    model->addGame(title, series_id, status_id);
+    model->select();
 }
 
 bool MainWindow::isFirstRun()
