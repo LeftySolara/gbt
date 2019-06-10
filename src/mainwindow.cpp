@@ -36,6 +36,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    createActions();
+    createMenus();
+
     if (!Settings::settingsFileExists())
         Settings::applyDefaultSettings();
 
@@ -53,19 +56,35 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete model;
+
+    delete exit_act;
+    delete addGame_act;
+    delete removeGame_act;
+    delete aboutQt_act;
+
+    delete library_group;
 }
 
-void MainWindow::on_actionQuit_triggered()
+#ifndef QT_NO_CONTEXTMENU
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu menu(this);
+    menu.addAction(removeGame_act);
+    menu.exec(event->globalPos());
+}
+#endif // QT_NO_CONTEXTMENU
+
+void MainWindow::exit()
 {
     QApplication::exit();
 }
 
-void MainWindow::on_actionAbout_Qt_triggered()
+void MainWindow::aboutQt()
 {
     QApplication::aboutQt();
 }
 
-void MainWindow::on_actionAdd_Game_triggered()
+void MainWindow::addGame()
 {
     DialogAddGame dialog(nullptr, model);
 
@@ -84,7 +103,7 @@ void MainWindow::on_actionAdd_Game_triggered()
     model->select();
 }
 
-void MainWindow::on_actionRemove_Game_triggered()
+void MainWindow::removeGame()
 {
     QModelIndex index = table_view->selectionModel()->currentIndex();
     QString game_title = index.sibling(index.row(), 1).data().toString();
@@ -101,6 +120,38 @@ void MainWindow::on_actionRemove_Game_triggered()
     int game_id = index.sibling(index.row(), 0).data().toInt();
     model->removeGame(game_id);
     model->select();
+}
+
+void MainWindow::createActions()
+{
+    exit_act = new QAction(tr("&Exit"), this);
+    connect(exit_act, &QAction::triggered, this, &MainWindow::exit);
+
+    addGame_act = new QAction(tr("&Add Game"), this);
+    connect(addGame_act, &QAction::triggered, this, &MainWindow::addGame);
+
+    removeGame_act = new QAction(tr("&Remove Game"), this);
+    connect(removeGame_act, &QAction::triggered, this, &MainWindow::removeGame);
+
+    aboutQt_act = new QAction(tr("&About Qt..."), this);
+    connect(aboutQt_act, &QAction::triggered, this, &MainWindow::aboutQt);
+
+    library_group = new QActionGroup(this);
+    library_group->addAction(addGame_act);
+    library_group->addAction(removeGame_act);
+}
+
+void MainWindow::createMenus()
+{
+    file_menu = menuBar()->addMenu(tr("&File"));
+    file_menu->addAction(exit_act);
+
+    library_menu = menuBar()->addMenu(tr("&Library"));
+    library_menu->addAction(addGame_act);
+    library_menu->addAction(removeGame_act);
+
+    help_menu = menuBar()->addMenu(tr("&Help"));
+    help_menu->addAction(aboutQt_act);
 }
 
 bool MainWindow::isFirstRun()

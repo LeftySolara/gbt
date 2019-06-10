@@ -27,6 +27,8 @@
 #include "gamesdatabasemodel.h"
 
 #include <QMainWindow>
+#include <QAction>
+#include <QContextMenuEvent>
 #include <QSqlDatabase>
 #include <QTableView>
 
@@ -40,16 +42,23 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
+
+protected:
+#ifndef QT_NO_CONTEXTMENU
+    void contextMenuEvent(QContextMenuEvent *event) override;
+#endif // QT_NO_CONTEXTMENU
 
 private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-    void on_actionAdd_Game_triggered();
-    void on_actionRemove_Game_triggered();
+    void exit();
+    void aboutQt();
+    void addGame();
+    void removeGame();
 
 private:
+    void createActions();
+    void createMenus();
+
     bool isFirstRun();
     bool initializeDatabaseModel();
 
@@ -57,8 +66,18 @@ private:
 
     QSqlDatabase database;
     GamesDatabaseModel *model;
-
     QTableView *table_view;
+
+    QMenu *file_menu;
+    QMenu *library_menu;
+    QMenu *help_menu;
+
+    QAction *exit_act;
+    QAction *addGame_act;
+    QAction *removeGame_act;
+    QAction *aboutQt_act;
+
+    QActionGroup *library_group;
 };
 
 #endif // MAINWINDOW_H
