@@ -28,6 +28,8 @@
 #include "settings.h"
 #include "dialogaddgame.h"
 
+#include <QMessageBox>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -85,8 +87,18 @@ void MainWindow::on_actionAdd_Game_triggered()
 void MainWindow::on_actionRemove_Game_triggered()
 {
     QModelIndex index = table_view->selectionModel()->currentIndex();
-    int game_id = index.sibling(index.row(), 0).data().toInt();
+    QString game_title = index.sibling(index.row(), 1).data().toString();
 
+    QMessageBox msg_box;
+    msg_box.setInformativeText("Remove \"" + game_title + "\" from library?");
+    msg_box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msg_box.setDefaultButton(QMessageBox::No);
+    int rc = msg_box.exec();
+
+    if (rc == QMessageBox::No)
+        return;
+
+    int game_id = index.sibling(index.row(), 0).data().toInt();
     model->removeGame(game_id);
     model->select();
 }
