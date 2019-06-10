@@ -82,6 +82,15 @@ void MainWindow::on_actionAdd_Game_triggered()
     model->select();
 }
 
+void MainWindow::on_actionRemove_Game_triggered()
+{
+    QModelIndex index = table_view->selectionModel()->currentIndex();
+    int game_id = index.sibling(index.row(), 0).data().toInt();
+
+    model->removeGame(game_id);
+    model->select();
+}
+
 bool MainWindow::isFirstRun()
 {
     return (!Settings::settingsFileExists() && !DBUtils::databaseFileExists());

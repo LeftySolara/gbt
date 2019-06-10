@@ -88,6 +88,7 @@
      <string>Library</string>
     </property>
     <addaction name="actionAdd_Game"/>
+    <addaction name="actionRemove_Game"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLibrary"/>
@@ -107,6 +108,11 @@
   <action name="actionAdd_Game">
    <property name="text">
     <string>Add Game</string>
+   </property>
+  </action>
+  <action name="actionRemove_Game">
+   <property name="text">
+    <string>Remove Game</string>
    </property>
   </action>
  </widget>

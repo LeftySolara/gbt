@@ -47,6 +47,7 @@ private slots:
     void on_actionAbout_Qt_triggered();
 
     void on_actionAdd_Game_triggered();
+    void on_actionRemove_Game_triggered();
 
 private:
     bool isFirstRun();

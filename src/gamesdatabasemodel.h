@@ -41,6 +41,8 @@ public:
 
     bool addSeries(QString series);
     bool addGame(QString title, int series_id, int status_id);
+
+    bool removeGame(int game_id);
 };
 
 #endif // GAMESDATABASEMODEL_H

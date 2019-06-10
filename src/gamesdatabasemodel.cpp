@@ -112,3 +112,17 @@ bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
 
     return false;
 }
+
+bool GamesDatabaseModel::removeGame(int game_id)
+{
+    QSqlQuery query(database());
+
+    query.prepare("DELETE FROM games WHERE id = :game_id");
+    query.bindValue(":game_id", game_id);
+    query.exec();
+
+    if (query.lastError().type() == QSqlError::NoError)
+        return true;
+
+    return false;
+}
