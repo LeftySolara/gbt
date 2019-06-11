@@ -62,6 +62,8 @@ private:
     bool isFirstRun();
     bool initializeDatabaseModel();
 
+    void refreshTableView();
+
     Ui::MainWindow *ui;
 
     QSqlDatabase database;

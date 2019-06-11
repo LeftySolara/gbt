@@ -100,7 +100,7 @@ void MainWindow::addGame()
         model->addSeries(series);
 
     model->addGame(title, series_id, status_id);
-    model->select();
+    refreshTableView();
 }
 
 void MainWindow::removeGame()
@@ -119,7 +119,7 @@ void MainWindow::removeGame()
 
     int game_id = index.sibling(index.row(), 0).data().toInt();
     model->removeGame(game_id);
-    model->select();
+    refreshTableView();
 }
 
 void MainWindow::createActions()
@@ -188,4 +188,10 @@ bool MainWindow::initializeDatabaseModel()
     model->select();
 
     return true;
+}
+
+void MainWindow::refreshTableView()
+{
+    model->select();
+    table_view->resizeRowsToContents();
 }
