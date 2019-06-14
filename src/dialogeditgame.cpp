@@ -1,5 +1,5 @@
 /******************************************************************************
- * dialogaddgame.h : dialog windows for adding games to library
+ * dialogaddgame.cpp : dialog windows for editing games in library
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,38 +21,24 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef DIALOGADDGAME_H
-#define DIALOGADDGAME_H
+#include "dialogeditgame.h"
 
-#include "gamesdatabasemodel.h"
-#include "uniquefiltermodel.h"
+#define TITLE_COLUMN 1
+#define STATUS_COLUMN 2
+#define SERIES_COLUMN 3
 
-#include <QDialog>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QCompleter>
-
-namespace Ui {
-class DialogAddGame;
-}
-
-class DialogAddGame : public QDialog
+DialogEditGame::DialogEditGame(QWidget *parent, GamesDatabaseModel *model, const QModelIndex &index) :
+    DialogAddGame(parent, model)
 {
-    Q_OBJECT
+    line_edit_title = ui->lineEditTitle;
+    line_edit_series = ui->lineEditSeries;
+    combo_box_status = ui->comboBoxStatus;
 
-public:
-    explicit DialogAddGame(QWidget *parent = nullptr, GamesDatabaseModel *model = nullptr);
-    ~DialogAddGame();
+    QString title = index.sibling(index.row(), TITLE_COLUMN).data().toString();
+    QString series = index.sibling(index.row(), SERIES_COLUMN).data().toString();
+    QString status = index.sibling(index.row(), STATUS_COLUMN).data().toString();
 
-    QLineEdit *line_edit_title;
-    QLineEdit *line_edit_series;
-    QComboBox *combo_box_status;
-
-protected:
-    QStringList status_list;
-    QCompleter *completer;
-    UniqueFilterModel *proxy_model;
-    Ui::DialogAddGame *ui;
-};
-
-#endif // DIALOGADDGAME_H
+    line_edit_title->setText(title);
+    line_edit_series->setText(series);
+    combo_box_status->setCurrentIndex(status_list.indexOf(status));
+}

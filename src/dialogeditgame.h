@@ -1,5 +1,5 @@
 /******************************************************************************
- * dialogaddgame.h : dialog windows for adding games to library
+ * dialogaddgame.h : dialog windows for editing games in library
  * ****************************************************************************
  * Copyright (C) 2019 Jalen Adams
  *
@@ -21,38 +21,23 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef DIALOGADDGAME_H
-#define DIALOGADDGAME_H
+#ifndef DIALOGEDITGAME_H
+#define DIALOGEDITGAME_H
 
-#include "gamesdatabasemodel.h"
-#include "uniquefiltermodel.h"
-
-#include <QDialog>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QCompleter>
+#include "dialogaddgame.h"
+#include "ui_dialogaddgame.h"
 
 namespace Ui {
-class DialogAddGame;
+class DialogEditGame;
 }
 
-class DialogAddGame : public QDialog
+class DialogEditGame : public DialogAddGame
 {
     Q_OBJECT
 
 public:
-    explicit DialogAddGame(QWidget *parent = nullptr, GamesDatabaseModel *model = nullptr);
-    ~DialogAddGame();
-
-    QLineEdit *line_edit_title;
-    QLineEdit *line_edit_series;
-    QComboBox *combo_box_status;
-
-protected:
-    QStringList status_list;
-    QCompleter *completer;
-    UniqueFilterModel *proxy_model;
-    Ui::DialogAddGame *ui;
+    explicit DialogEditGame(QWidget *parent = nullptr, GamesDatabaseModel *model = nullptr,
+                            const QModelIndex &index = QModelIndex());
 };
 
-#endif // DIALOGADDGAME_H
+#endif // DIALOGEDITGAME_H

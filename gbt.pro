@@ -31,6 +31,7 @@ CONFIG += c++11
 SOURCES += \
         src/dbutils.cpp \
         src/dialogaddgame.cpp \
+        src/dialogeditgame.cpp \
         src/gamesdatabasemodel.cpp \
         src/logutils.cpp \
         src/main.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
 HEADERS += \
         src/dbutils.h \
         src/dialogaddgame.h \
+        src/dialogeditgame.h \
         src/gamesdatabasemodel.h \
         src/logutils.h \
         src/mainwindow.h \

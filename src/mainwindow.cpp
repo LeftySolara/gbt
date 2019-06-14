@@ -27,6 +27,7 @@
 #include "dbutils.h"
 #include "settings.h"
 #include "dialogaddgame.h"
+#include "dialogeditgame.h"
 
 #include <QMessageBox>
 
@@ -120,6 +121,12 @@ void MainWindow::removeGame()
     int game_id = index.sibling(index.row(), 0).data().toInt();
     model->removeGame(game_id);
     refreshTableView();
+}
+
+void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
+{
+    DialogEditGame dialog(nullptr, model, index);
+    dialog.exec();
 }
 
 void MainWindow::createActions()

@@ -55,6 +55,8 @@ private slots:
     void addGame();
     void removeGame();
 
+    void on_tableView_doubleClicked(const QModelIndex &index);
+
 private:
     void createActions();
     void createMenus();
