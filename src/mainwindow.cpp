@@ -110,7 +110,25 @@ void MainWindow::editGame()
 {
     QModelIndex index = table_view->currentIndex();
     DialogEditGame dialog(nullptr, model, index);
-    dialog.exec();
+    int game_id = model->getGameID(dialog.line_edit_title->text().replace("'", "''"));
+
+    if (!dialog.exec())
+        return;
+
+    // SQLite uses single quotes to enclose strings, so we need to escape them.
+    QString series = dialog.line_edit_series->text().replace("'", "''");
+    QString title = dialog.line_edit_title->text();
+
+    int status_id = dialog.combo_box_status->currentIndex();
+    int series_id = model->getSeriesID(series);
+
+    if (series_id == -1 && !series.isEmpty()) {
+        model->addSeries(series);
+        series_id = model->getNextSeriesID() - 1;
+    }
+
+    model->editGame(game_id, title, series_id, status_id);
+    refreshTableView();
 }
 
 void MainWindow::removeGame()

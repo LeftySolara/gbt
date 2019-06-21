@@ -34,13 +34,18 @@ public:
     explicit GamesDatabaseModel(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    int getGameID(QString title);
     int getSeriesID(QString series);
+
+    int getNextGameID();
     int getNextSeriesID();
 
     bool hasSeries(QString series);
 
     bool addSeries(QString series);
     bool addGame(QString title, int series_id, int status_id);
+
+    bool editGame(int game_id, QString title, int series_id, int status_id);
 
     bool removeGame(int game_id);
 };
