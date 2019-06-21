@@ -76,5 +76,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>tableView</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>editGame()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>439</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>478</x>
+     <y>26</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>editGame()</slot>
+ </slots>
 </ui>

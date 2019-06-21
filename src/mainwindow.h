@@ -53,9 +53,8 @@ private slots:
     void exit();
     void aboutQt();
     void addGame();
+    void editGame();
     void removeGame();
-
-    void on_tableView_doubleClicked(const QModelIndex &index);
 
 private:
     void createActions();
@@ -78,6 +77,7 @@ private:
 
     QAction *exit_act;
     QAction *addGame_act;
+    QAction *editGame_act;
     QAction *removeGame_act;
     QAction *aboutQt_act;
 

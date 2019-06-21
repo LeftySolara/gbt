@@ -60,6 +60,7 @@ MainWindow::~MainWindow()
 
     delete exit_act;
     delete addGame_act;
+    delete editGame_act;
     delete removeGame_act;
     delete aboutQt_act;
 
@@ -70,6 +71,7 @@ MainWindow::~MainWindow()
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
+    menu.addAction(editGame_act);
     menu.addAction(removeGame_act);
     menu.exec(event->globalPos());
 }
@@ -104,6 +106,13 @@ void MainWindow::addGame()
     refreshTableView();
 }
 
+void MainWindow::editGame()
+{
+    QModelIndex index = table_view->currentIndex();
+    DialogEditGame dialog(nullptr, model, index);
+    dialog.exec();
+}
+
 void MainWindow::removeGame()
 {
     QModelIndex index = table_view->selectionModel()->currentIndex();
@@ -123,12 +132,6 @@ void MainWindow::removeGame()
     refreshTableView();
 }
 
-void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
-{
-    DialogEditGame dialog(nullptr, model, index);
-    dialog.exec();
-}
-
 void MainWindow::createActions()
 {
     exit_act = new QAction(tr("&Exit"), this);
@@ -136,6 +139,9 @@ void MainWindow::createActions()
 
     addGame_act = new QAction(tr("&Add Game"), this);
     connect(addGame_act, &QAction::triggered, this, &MainWindow::addGame);
+
+    editGame_act = new QAction(tr("&Edit Game"), this);
+    connect(editGame_act, &QAction::triggered, this, &MainWindow::editGame);
 
     removeGame_act = new QAction(tr("&Remove Game"), this);
     connect(removeGame_act, &QAction::triggered, this, &MainWindow::removeGame);
