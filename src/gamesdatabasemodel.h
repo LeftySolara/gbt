@@ -52,6 +52,9 @@ public:
     bool editGame(int game_id, QString title, int series_id, int status_id);
 
     bool removeGame(int game_id);
+
+private:
+    QSqlQuery buildAddGameQuery(QString title, int series_id = -1, int status_id = -1);
 };
 
 #endif // GAMESDATABASEMODEL_H

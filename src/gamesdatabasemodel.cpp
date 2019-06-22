@@ -27,6 +27,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QTextStream>
+#include <QVector>
 
 GamesDatabaseModel::GamesDatabaseModel(QObject *parent, QSqlDatabase db)
     : QSqlRelationalTableModel(parent)
@@ -167,22 +168,7 @@ bool GamesDatabaseModel::addPlatform(QString platform)
 
 bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
 {
-    QSqlQuery query(database());
-    QString query_string;
-
-    if (series_id >= 0)
-        query_string = "INSERT INTO games (name, status_id, series_id) "
-                       "VALUES (:name, :status_id, :series_id)";
-    else
-        query_string = "INSERT INTO games (name, status_id) "
-                       "VALUES (:name, :status_id)";
-
-    query.prepare(query_string);
-    query.bindValue(":name", title);
-    query.bindValue(":status_id", status_id);
-    if (series_id >= 0)
-        query.bindValue(":series_id", series_id);
-
+    QSqlQuery query = buildAddGameQuery(title, series_id, status_id);
     query.exec();
     if (query.lastError().type() == QSqlError::NoError)
         return true;
@@ -230,4 +216,43 @@ bool GamesDatabaseModel::removeGame(int game_id)
         return true;
 
     return false;
+}
+
+// Because there's a variable number of parameters used when adding a game
+// to the database, we need to dynamically create a SQL query for doing it.
+QSqlQuery GamesDatabaseModel::buildAddGameQuery(QString title, int series_id, int status_id)
+{
+    QStringList parameter_list;
+    QStringList placeholder_list;
+    QVector<QVariant> values;
+
+    parameter_list.append("name");
+    placeholder_list.append(":name");
+    values.append(title);
+
+    if (series_id >= 0) {
+        parameter_list.append("series_id");
+        placeholder_list.append(":series_id");
+        values.append(series_id);
+    }
+    if (status_id >= 0) {
+        parameter_list.append("status_id");
+        placeholder_list.append(":status_id");
+        values.append(status_id);
+    }
+
+    QString parameters = parameter_list.join(", ");
+    QString placeholders = placeholder_list.join(", ");
+
+    QString query_string = "INSERT INTO games (" + parameters + ") "
+            "VALUES (" + placeholders + ")";
+
+
+    QSqlQuery query(database());
+    query.prepare(query_string);
+
+    for (int i = 0; i < values.length(); ++i)
+        query.bindValue(placeholder_list[i], values[i]);
+
+    return query;
 }
