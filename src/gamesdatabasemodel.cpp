@@ -222,37 +222,28 @@ bool GamesDatabaseModel::removeGame(int game_id)
 // to the database, we need to dynamically create a SQL query for doing it.
 QSqlQuery GamesDatabaseModel::buildAddGameQuery(QString title, int series_id, int status_id)
 {
-    QStringList parameter_list;
-    QStringList placeholder_list;
-    QVector<QVariant> values;
+    QVariantMap game_data;
+    game_data.insert("name", title);
 
-    parameter_list.append("name");
-    placeholder_list.append(":name");
-    values.append(title);
+    if (series_id >= 0)
+        game_data.insert("series_id", series_id);
+    if (status_id >= 0)
+        game_data.insert("status_id", status_id);
 
-    if (series_id >= 0) {
-        parameter_list.append("series_id");
-        placeholder_list.append(":series_id");
-        values.append(series_id);
-    }
-    if (status_id >= 0) {
-        parameter_list.append("status_id");
-        placeholder_list.append(":status_id");
-        values.append(status_id);
-    }
-
-    QString parameters = parameter_list.join(", ");
-    QString placeholders = placeholder_list.join(", ");
+    QString parameters = game_data.keys().join(", ");
+    QString placeholders = game_data.keys().join(", :").prepend(':');
 
     QString query_string = "INSERT INTO games (" + parameters + ") "
             "VALUES (" + placeholders + ")";
 
-
     QSqlQuery query(database());
     query.prepare(query_string);
 
-    for (int i = 0; i < values.length(); ++i)
-        query.bindValue(placeholder_list[i], values[i]);
+    auto i = game_data.constBegin();
+    while (i != game_data.constEnd()) {
+        query.bindValue(":" + i.key(), i.value());
+        ++i;
+    }
 
     return query;
 }

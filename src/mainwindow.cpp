@@ -99,8 +99,10 @@ void MainWindow::addGame()
     int status_id = dialog.combo_box_status->currentIndex();
     int series_id = model->getSeriesID(series);
 
-    if (series_id == -1 && !series.isEmpty())
+    if (series_id == -1 && !series.isEmpty()) {
         model->addSeries(series);
+        series_id = model->getSeriesID(series);
+    }
 
     model->addGame(title, series_id, status_id);
     refreshTableView();
