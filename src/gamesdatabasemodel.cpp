@@ -79,6 +79,25 @@ int GamesDatabaseModel::getSeriesID(QString series)
     return -1;
 }
 
+int GamesDatabaseModel::getPlatformID(QString platform)
+{
+    QSqlQuery query(database());
+    QString query_string = "SELECT * FROM platforms WHERE name = '" + platform + "'";
+    query.exec(query_string);
+
+    if (query.next()) {
+        int id = query.value(0).toInt();
+        int next_id = getNextPlatformID();
+
+        if (id >= next_id)  // Platform doesn't exist
+            return -1;
+        else
+            return id;
+    }
+
+    return -1;
+}
+
 int GamesDatabaseModel::getNextGameID()
 {
     QSqlQuery query(database());
@@ -101,9 +120,25 @@ int GamesDatabaseModel::getNextSeriesID()
         return -1;
 }
 
+int GamesDatabaseModel::getNextPlatformID()
+{
+    QSqlQuery query(database());
+    query.exec("SELECT * FROM SQLITE_SEQUENCE WHERE name = 'platform'");
+
+    if (query.next())
+        return query.value(1).toInt() + 1;
+    else
+        return -1;
+}
+
 bool GamesDatabaseModel::hasSeries(QString series)
 {
     return getSeriesID(series) >= 0;
+}
+
+bool GamesDatabaseModel::hasPlatform(QString platform)
+{
+    return getPlatformID(platform) >= 0;
 }
 
 bool GamesDatabaseModel::addSeries(QString series)
@@ -116,6 +151,18 @@ bool GamesDatabaseModel::addSeries(QString series)
     query.exec(query_string);
 
     return hasSeries(series);
+}
+
+bool GamesDatabaseModel::addPlatform(QString platform)
+{
+   if (hasPlatform(platform))
+       return false;
+
+   QSqlQuery query(database());
+   QString query_string = "INSERT INTO platforms (name) VALUES ('" + platform + "')";
+   query.exec(query_string);
+
+   return hasPlatform(platform);
 }
 
 bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)

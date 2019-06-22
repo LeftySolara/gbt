@@ -36,13 +36,17 @@ public:
 
     int getGameID(QString title);
     int getSeriesID(QString series);
+    int getPlatformID(QString platform);
 
     int getNextGameID();
     int getNextSeriesID();
+    int getNextPlatformID();
 
     bool hasSeries(QString series);
+    bool hasPlatform(QString platform);
 
     bool addSeries(QString series);
+    bool addPlatform(QString platform);
     bool addGame(QString title, int series_id, int status_id);
 
     bool editGame(int game_id, QString title, int series_id, int status_id);

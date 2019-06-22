@@ -26,19 +26,23 @@
 #define TITLE_COLUMN 1
 #define STATUS_COLUMN 2
 #define SERIES_COLUMN 3
+#define PLATFORM_COLUMN 4
 
 DialogEditGame::DialogEditGame(QWidget *parent, GamesDatabaseModel *model, const QModelIndex &index) :
     DialogAddGame(parent, model)
 {
     line_edit_title = ui->lineEditTitle;
     line_edit_series = ui->lineEditSeries;
+    line_edit_platform = ui->lineEditPlatform;
     combo_box_status = ui->comboBoxStatus;
 
     QString title = index.sibling(index.row(), TITLE_COLUMN).data().toString();
     QString series = index.sibling(index.row(), SERIES_COLUMN).data().toString();
     QString status = index.sibling(index.row(), STATUS_COLUMN).data().toString();
+    QString platform = index.sibling(index.row(), PLATFORM_COLUMN).data().toString();
 
     line_edit_title->setText(title);
     line_edit_series->setText(series);
+    line_edit_platform->setText(platform);
     combo_box_status->setCurrentIndex(status_list.indexOf(status));
 }

@@ -25,6 +25,7 @@
 #include "ui_dialogaddgame.h"
 
 #define SERIES_COLUMN 3
+#define PLATFORM_COLUMN 4
 
 DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     QDialog(parent),
@@ -34,6 +35,7 @@ DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     combo_box_status = ui->comboBoxStatus;
     line_edit_title = ui->lineEditTitle;
     line_edit_series = ui->lineEditSeries;
+    line_edit_platform = ui->lineEditPlatform;
 
     // We'll add options to the combo box using string literals.
     // We could set the combo box to use the database model, but that
@@ -46,19 +48,31 @@ DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     // To set up auto completions, we need to use a proxy model.
     // That way we can filter out duplicates without altering
     // the actual underlying data.
-    proxy_model = new UniqueFilterModel(this);
-    proxy_model->setSourceModel(model);
-    proxy_model->setFilterKeyColumn(SERIES_COLUMN);
+    series_proxy_model = new UniqueFilterModel(this);
+    series_proxy_model->setSourceModel(model);
+    series_proxy_model->setFilterKeyColumn(SERIES_COLUMN);
 
-    completer = new QCompleter(proxy_model);
-    completer->setCompletionColumn(SERIES_COLUMN);
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    ui->lineEditSeries->setCompleter(completer);
+    series_completer = new QCompleter(series_proxy_model);
+    series_completer->setCompletionColumn(SERIES_COLUMN);
+    series_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    ui->lineEditSeries->setCompleter(series_completer);
+
+
+    platform_proxy_model = new UniqueFilterModel(this);
+    platform_proxy_model->setSourceModel(model);
+    platform_proxy_model->setFilterKeyColumn(PLATFORM_COLUMN);
+
+    platform_completer = new QCompleter(platform_proxy_model);
+    platform_completer->setCompletionColumn(PLATFORM_COLUMN);
+    platform_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    ui->lineEditPlatform->setCompleter(platform_completer);
 }
 
 DialogAddGame::~DialogAddGame()
 {
-    delete completer;
-    delete proxy_model;
+    delete series_completer;
+    delete series_proxy_model;
+    delete platform_completer;
+    delete platform_proxy_model;
     delete ui;
 }

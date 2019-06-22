@@ -213,9 +213,11 @@ bool MainWindow::initializeDatabaseModel()
     model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
     model->setRelation(2, QSqlRelation("status", "id", "name"));
     model->setRelation(3, QSqlRelation("series", "id", "name"));
+    model->setRelation(4, QSqlRelation("platforms", "id", "name"));
     model->setHeaderData(1, Qt::Horizontal, "Title");
     model->setHeaderData(2, Qt::Horizontal, "Status");
     model->setHeaderData(3, Qt::Horizontal, "Series");
+    model->setHeaderData(4, Qt::Horizontal, "Platform");
     model->select();
 
     return true;

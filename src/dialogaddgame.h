@@ -46,12 +46,15 @@ public:
 
     QLineEdit *line_edit_title;
     QLineEdit *line_edit_series;
+    QLineEdit *line_edit_platform;
     QComboBox *combo_box_status;
 
 protected:
     QStringList status_list;
-    QCompleter *completer;
-    UniqueFilterModel *proxy_model;
+    QCompleter *series_completer;
+    QCompleter *platform_completer;
+    UniqueFilterModel *series_proxy_model;
+    UniqueFilterModel *platform_proxy_model;
     Ui::DialogAddGame *ui;
 };
 
