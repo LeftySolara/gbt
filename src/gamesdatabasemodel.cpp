@@ -27,6 +27,8 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QTextStream>
+#include <QVector>
+#include <QDebug>
 
 GamesDatabaseModel::GamesDatabaseModel(QObject *parent, QSqlDatabase db)
     : QSqlRelationalTableModel(parent)
@@ -167,67 +169,85 @@ bool GamesDatabaseModel::addPlatform(QString platform)
 
 bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
 {
+    QVariantMap game_data;
+    game_data.insert("name", title);
+
+    if (series_id >= 0)
+        game_data.insert("series_id", series_id);
+    if (status_id >= 0)
+        game_data.insert("status_id", status_id);
+
+    QString parameters = game_data.keys().join(", ");
+    QString placeholders = game_data.keys().join(", :").prepend(':');
+
+    QString query_string = "INSERT INTO games (" + parameters + ") "
+            "VALUES (" + placeholders + ")";
+
     QSqlQuery query(database());
-    QString query_string;
-
-    if (series_id >= 0)
-        query_string = "INSERT INTO games (name, status_id, series_id) "
-                       "VALUES (:name, :status_id, :series_id)";
-    else
-        query_string = "INSERT INTO games (name, status_id) "
-                       "VALUES (:name, :status_id)";
-
     query.prepare(query_string);
-    query.bindValue(":name", title);
-    query.bindValue(":status_id", status_id);
-    if (series_id >= 0)
-        query.bindValue(":series_id", series_id);
 
-    query.exec();
-    if (query.lastError().type() == QSqlError::NoError)
-        return true;
+    auto i = game_data.constBegin();
+    while (i != game_data.constEnd()) {
+        query.bindValue(":" + i.key(), i.value());
+        ++i;
+    }
 
-    return false;
+    return execute_query(query);
 }
 
 bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id)
 {
+    if (game_id < 0)  // Game doesn't exist
+        return false;
+
+    QVariantMap game_data;
+    game_data.insert("name", title);
+
+    if (series_id >= 0)
+        game_data.insert("series_id", series_id);
+    if (status_id >= 0)
+        game_data.insert("status_id", status_id);
+
+    QStringList parameter_list;
+    for (QString param : game_data.keys())
+        parameter_list.append(param + " = :" + param);
+
+    QString parameters = parameter_list.join(", ");
+    QString query_string = "UPDATE games SET " + parameters + " WHERE id = :game_id";
+
     QSqlQuery query(database());
-    QString query_string;
-
-    if (series_id >= 0)
-        query_string = "UPDATE games SET "
-            "name = :name, series_id = :series_id, status_id = :status_id "
-            "WHERE id = :game_id";
-    else
-        query_string = "UPDATE games SET "
-            "name = :name, status_id = :status_id "
-            "WHERE id = :game_id";
-
     query.prepare(query_string);
-    query.bindValue(":name", title);
-    query.bindValue(":status_id", status_id);
-    query.bindValue(":game_id", game_id);
-    if (series_id >= 0)
-        query.bindValue(":series_id", series_id);
 
-    query.exec();
-    if (query.lastError().type() == QSqlError::NoError)
-        return true;
+    // We add this after everything else to keep the parameter count correct.
+    // Also, we don't want to change the game ID when editing entries.
+    game_data.insert("game_id", game_id);
 
-    return false;
+    auto i = game_data.constBegin();
+    while (i != game_data.constEnd()) {
+        query.bindValue(":" + i.key(), i.value());
+        ++i;
+    }
+
+    return execute_query(query);
 }
 
 bool GamesDatabaseModel::removeGame(int game_id)
 {
     QSqlQuery query(database());
-
     query.prepare("DELETE FROM games WHERE id = :game_id");
     query.bindValue(":game_id", game_id);
+
+    return execute_query(query);
+}
+
+bool GamesDatabaseModel::execute_query(QSqlQuery query)
+{
     query.exec();
 
     if (query.lastError().type() == QSqlError::NoError)
         return true;
-
-    return false;
+    else {
+        qWarning() << "Database error: " + query.lastError().text();
+        return false;
+    }
 }
