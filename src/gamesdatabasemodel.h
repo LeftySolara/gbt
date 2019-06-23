@@ -55,6 +55,7 @@ public:
 
 private:
     QSqlQuery buildAddGameQuery(QString title, int series_id = -1, int status_id = -1);
+    QSqlQuery buildEditGameQuery(int game_id, QString title, int series_id, int status_id);
 };
 
 #endif // GAMESDATABASEMODEL_H
