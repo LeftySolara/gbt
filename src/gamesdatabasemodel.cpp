@@ -170,23 +170,13 @@ bool GamesDatabaseModel::addPlatform(QString platform)
 bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
 {
     QSqlQuery query = buildAddGameQuery(title, series_id, status_id);
-    query.exec();
-    if (query.lastError().type() == QSqlError::NoError)
-        return true;
-
-    return false;
+    return execute_query(query);
 }
 
 bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id)
 {
     QSqlQuery query = buildEditGameQuery(game_id, title, series_id, status_id);
-    query.exec();
-    if (query.lastError().type() == QSqlError::NoError)
-        return true;
-    else {
-        qDebug() << "Database error while editing entry: " + query.lastError().text();
-        return false;
-    }
+    return execute_query(query);
 }
 
 bool GamesDatabaseModel::removeGame(int game_id)
@@ -195,12 +185,8 @@ bool GamesDatabaseModel::removeGame(int game_id)
 
     query.prepare("DELETE FROM games WHERE id = :game_id");
     query.bindValue(":game_id", game_id);
-    query.exec();
 
-    if (query.lastError().type() == QSqlError::NoError)
-        return true;
-
-    return false;
+    return execute_query(query);
 }
 
 // Because there's a variable number of parameters used when adding a game
@@ -267,4 +253,16 @@ QSqlQuery GamesDatabaseModel::buildEditGameQuery(int game_id, QString title, int
     }
 
     return query;
+}
+
+bool GamesDatabaseModel::execute_query(QSqlQuery query)
+{
+    query.exec();
+
+    if (query.lastError().type() == QSqlError::NoError)
+        return true;
+    else {
+        qWarning() << "Database error: " + query.lastError().text();
+        return false;
+    }
 }
