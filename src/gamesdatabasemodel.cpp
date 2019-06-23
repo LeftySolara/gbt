@@ -169,30 +169,6 @@ bool GamesDatabaseModel::addPlatform(QString platform)
 
 bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
 {
-    QSqlQuery query = buildAddGameQuery(title, series_id, status_id);
-    return execute_query(query);
-}
-
-bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id)
-{
-    QSqlQuery query = buildEditGameQuery(game_id, title, series_id, status_id);
-    return execute_query(query);
-}
-
-bool GamesDatabaseModel::removeGame(int game_id)
-{
-    QSqlQuery query(database());
-
-    query.prepare("DELETE FROM games WHERE id = :game_id");
-    query.bindValue(":game_id", game_id);
-
-    return execute_query(query);
-}
-
-// Because there's a variable number of parameters used when adding a game
-// to the database, we need to dynamically create a SQL query for doing it.
-QSqlQuery GamesDatabaseModel::buildAddGameQuery(QString title, int series_id, int status_id)
-{
     QVariantMap game_data;
     game_data.insert("name", title);
 
@@ -216,13 +192,13 @@ QSqlQuery GamesDatabaseModel::buildAddGameQuery(QString title, int series_id, in
         ++i;
     }
 
-    return query;
+    return execute_query(query);
 }
 
-QSqlQuery GamesDatabaseModel::buildEditGameQuery(int game_id, QString title, int series_id, int status_id)
+bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id)
 {
     if (game_id < 0)  // Game doesn't exist
-        return QSqlQuery();
+        return false;
 
     QVariantMap game_data;
     game_data.insert("name", title);
@@ -252,7 +228,16 @@ QSqlQuery GamesDatabaseModel::buildEditGameQuery(int game_id, QString title, int
         ++i;
     }
 
-    return query;
+    return execute_query(query);
+}
+
+bool GamesDatabaseModel::removeGame(int game_id)
+{
+    QSqlQuery query(database());
+    query.prepare("DELETE FROM games WHERE id = :game_id");
+    query.bindValue(":game_id", game_id);
+
+    return execute_query(query);
 }
 
 bool GamesDatabaseModel::execute_query(QSqlQuery query)
