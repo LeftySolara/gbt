@@ -125,7 +125,7 @@ int GamesDatabaseModel::getNextSeriesID()
 int GamesDatabaseModel::getNextPlatformID()
 {
     QSqlQuery query(database());
-    query.exec("SELECT * FROM SQLITE_SEQUENCE WHERE name = 'platform'");
+    query.exec("SELECT * FROM SQLITE_SEQUENCE WHERE name = 'platforms'");
 
     if (query.next())
         return query.value(1).toInt() + 1;
@@ -167,7 +167,7 @@ bool GamesDatabaseModel::addPlatform(QString platform)
    return hasPlatform(platform);
 }
 
-bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
+bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id, int platform_id)
 {
     QVariantMap game_data;
     game_data.insert("name", title);
@@ -176,6 +176,8 @@ bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
         game_data.insert("series_id", series_id);
     if (status_id >= 0)
         game_data.insert("status_id", status_id);
+    if (platform_id >= 0)
+        game_data.insert("platform_id", platform_id);
 
     QString parameters = game_data.keys().join(", ");
     QString placeholders = game_data.keys().join(", :").prepend(':');
@@ -195,7 +197,7 @@ bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id)
     return execute_query(query);
 }
 
-bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id)
+bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id, int platform_id)
 {
     if (game_id < 0)  // Game doesn't exist
         return false;
@@ -207,6 +209,8 @@ bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int
         game_data.insert("series_id", series_id);
     if (status_id >= 0)
         game_data.insert("status_id", status_id);
+    if (platform_id >= 0)
+        game_data.insert("platform_id", platform_id);
 
     QStringList parameter_list;
     for (QString param : game_data.keys())

@@ -47,9 +47,9 @@ public:
 
     bool addSeries(QString series);
     bool addPlatform(QString platform);
-    bool addGame(QString title, int series_id, int status_id);
+    bool addGame(QString title, int series_id, int status_id, int platform_id);
 
-    bool editGame(int game_id, QString title, int series_id, int status_id);
+    bool editGame(int game_id, QString title, int series_id, int status_id, int platform_id);
 
     bool removeGame(int game_id);
 
