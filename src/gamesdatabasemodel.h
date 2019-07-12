@@ -26,6 +26,15 @@
 
 #include <QSqlRelationalTableModel>
 
+
+struct GameData {
+    int id;
+    int status_id;
+    QString title;
+    QString series;
+    QString platform;
+};
+
 class GamesDatabaseModel : public QSqlRelationalTableModel
 {
     Q_OBJECT
@@ -42,12 +51,13 @@ public:
     int getNextSeriesID();
     int getNextPlatformID();
 
+    bool hasGame(QString title);
     bool hasSeries(QString series);
     bool hasPlatform(QString platform);
 
     bool addSeries(QString series);
     bool addPlatform(QString platform);
-    bool addGame(QString title, int series_id, int status_id, int platform_id);
+    bool addGame(struct GameData game_data);
 
     bool editGame(int game_id, QString title, int series_id, int status_id, int platform_id);
 

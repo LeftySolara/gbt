@@ -133,6 +133,11 @@ int GamesDatabaseModel::getNextPlatformID()
         return -1;
 }
 
+bool GamesDatabaseModel::hasGame(QString title)
+{
+    return getGameID(title) >= 0;
+}
+
 bool GamesDatabaseModel::hasSeries(QString series)
 {
     return getSeriesID(series) >= 0;
@@ -167,20 +172,35 @@ bool GamesDatabaseModel::addPlatform(QString platform)
    return hasPlatform(platform);
 }
 
-bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id, int platform_id)
+bool GamesDatabaseModel::addGame(struct GameData game_data)
 {
-    QVariantMap game_data;
-    game_data.insert("name", title);
+    if (hasGame(game_data.title))
+        return false;
 
+    QString series = game_data.series;
+    if (!series.isEmpty() && !hasSeries(series))
+        addSeries(series);
+
+    QString platform = game_data.platform;
+    if (!platform.isEmpty() && !hasPlatform(series))
+        addPlatform(platform);
+
+
+    QVariantMap query_data;
+    int status_id = game_data.status_id;
+    int series_id = getSeriesID(series);
+    int platform_id = getPlatformID(platform);
+
+    query_data.insert("name", game_data.title);
     if (series_id >= 0)
-        game_data.insert("series_id", series_id);
+        query_data.insert("series_id", series_id);
     if (status_id >= 0)
-        game_data.insert("status_id", status_id);
+        query_data.insert("status_id", status_id);
     if (platform_id >= 0)
-        game_data.insert("platform_id", platform_id);
+        query_data.insert("platform_id", platform_id);
 
-    QString parameters = game_data.keys().join(", ");
-    QString placeholders = game_data.keys().join(", :").prepend(':');
+    QString parameters = query_data.keys().join(", ");
+    QString placeholders = query_data.keys().join(", :").prepend(':');
 
     QString query_string = "INSERT INTO games (" + parameters + ") "
             "VALUES (" + placeholders + ")";
@@ -188,8 +208,8 @@ bool GamesDatabaseModel::addGame(QString title, int series_id, int status_id, in
     QSqlQuery query(database());
     query.prepare(query_string);
 
-    auto i = game_data.constBegin();
-    while (i != game_data.constEnd()) {
+    auto i = query_data.constBegin();
+    while (i != query_data.constEnd()) {
         query.bindValue(":" + i.key(), i.value());
         ++i;
     }

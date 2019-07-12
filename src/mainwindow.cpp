@@ -94,23 +94,13 @@ void MainWindow::addGame()
     if (!dialog.exec())
         return;
 
-    QString title = dialog.line_edit_title->text();
-    QString series = dialog.line_edit_series->text();
-    QString platform = dialog.line_edit_platform->text();
-    int status_id = dialog.combo_box_status->currentIndex();
-    int series_id = model->getSeriesID(series);
-    int platform_id = model->getPlatformID(platform);
+    struct GameData game_data;
+    game_data.title = dialog.line_edit_title->text();
+    game_data.series = dialog.line_edit_series->text();
+    game_data.platform = dialog.line_edit_platform->text();
+    game_data.status_id = dialog.combo_box_status->currentIndex();
 
-    if (series_id == -1 && !series.isEmpty()) {
-        model->addSeries(series);
-        series_id = model->getSeriesID(series);
-    }
-    if (platform_id == -1 && !platform.isEmpty()) {
-        model->addPlatform(platform);
-        platform_id = model->getPlatformID(platform);
-    }
-
-    model->addGame(title, series_id, status_id, platform_id);
+    model->addGame(game_data);
     refreshTableView();
 }
 
