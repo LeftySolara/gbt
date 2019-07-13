@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     table_view = ui->tableView;
     table_view->setModel(model);
     table_view->hideColumn(0);
+    table_view->sortByColumn(1, Qt::AscendingOrder);
     table_view->resizeRowsToContents();
     table_view->resizeColumnsToContents();
 }
