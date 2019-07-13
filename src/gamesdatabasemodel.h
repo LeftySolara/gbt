@@ -59,7 +59,7 @@ public:
     bool addPlatform(QString platform);
     bool addGame(struct GameData game_data);
 
-    bool editGame(int game_id, QString title, int series_id, int status_id, int platform_id);
+    bool editGame(struct GameData game_data);
 
     bool removeGame(int game_id);
 

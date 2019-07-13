@@ -217,23 +217,38 @@ bool GamesDatabaseModel::addGame(struct GameData game_data)
     return executeQuery(query);
 }
 
-bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id, int platform_id)
+bool GamesDatabaseModel::editGame(struct GameData game_data)
 {
-    if (game_id < 0)  // Game doesn't exist
+    // TODO: make a function for this check
+    if (!hasGame(game_data.title))
         return false;
 
-    QVariantMap game_data;
-    game_data.insert("name", title);
+    QString series = game_data.series;
+    if (!series.isEmpty() && !hasSeries(series))
+        addSeries(series);
 
+    QString platform = game_data.platform;
+    if (!platform.isEmpty() && !hasPlatform(series))
+        addPlatform(platform);
+    if (game_data.id < 0)  // Game doesn't exist
+        return false;
+
+
+    QVariantMap query_data;
+    int status_id = game_data.status_id;
+    int series_id = getSeriesID(series);
+    int platform_id = getPlatformID(platform);
+
+    query_data.insert("name", game_data.title);
     if (series_id >= 0)
-        game_data.insert("series_id", series_id);
+        query_data.insert("series_id", series_id);
     if (status_id >= 0)
-        game_data.insert("status_id", status_id);
+        query_data.insert("status_id", status_id);
     if (platform_id >= 0)
-        game_data.insert("platform_id", platform_id);
+        query_data.insert("platform_id", platform_id);
 
     QStringList parameter_list;
-    for (QString param : game_data.keys())
+    for (QString param : query_data.keys())
         parameter_list.append(param + " = :" + param);
 
     QString parameters = parameter_list.join(", ");
@@ -244,10 +259,10 @@ bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int
 
     // We add this after everything else to keep the parameter count correct.
     // Also, we don't want to change the game ID when editing entries.
-    game_data.insert("game_id", game_id);
+    query_data.insert("game_id", game_data.id);
 
-    auto i = game_data.constBegin();
-    while (i != game_data.constEnd()) {
+    auto i = query_data.constBegin();
+    while (i != query_data.constEnd()) {
         query.bindValue(":" + i.key(), i.value());
         ++i;
     }
