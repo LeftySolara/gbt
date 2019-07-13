@@ -177,34 +177,17 @@ bool GamesDatabaseModel::addGame(struct GameData game_data)
     if (hasGame(game_data.title))
         return false;
 
-    QString series = game_data.series;
-    if (!series.isEmpty() && !hasSeries(series))
-        addSeries(series);
-
-    QString platform = game_data.platform;
-    if (!platform.isEmpty() && !hasPlatform(series))
-        addPlatform(platform);
-
+    validateGameData(game_data);
     QSqlQuery query = buildAddGameQuery(game_data);
     return executeQuery(query);
 }
 
 bool GamesDatabaseModel::editGame(struct GameData game_data)
 {
-    // TODO: make a function for this check
     if (!hasGame(game_data.title))
         return false;
 
-    QString series = game_data.series;
-    if (!series.isEmpty() && !hasSeries(series))
-        addSeries(series);
-
-    QString platform = game_data.platform;
-    if (!platform.isEmpty() && !hasPlatform(series))
-        addPlatform(platform);
-    if (game_data.id < 0)  // Game doesn't exist
-        return false;
-
+    validateGameData(game_data);
     QSqlQuery query = buildEditGameQuery(game_data);
     return executeQuery(query);
 }
@@ -216,6 +199,19 @@ bool GamesDatabaseModel::removeGame(int game_id)
     query.bindValue(":game_id", game_id);
 
     return executeQuery(query);
+}
+
+// Checks the given game data for existing database entries.
+// If a field is given and there's currently no entry, one is added.
+void GamesDatabaseModel::validateGameData(GameData game_data)
+{
+    QString series = game_data.series;
+    if (!series.isEmpty() && !hasSeries(series))
+        addSeries(series);
+
+    QString platform = game_data.platform;
+    if (!platform.isEmpty() && !hasPlatform(series))
+        addPlatform(platform);
 }
 
 QSqlQuery GamesDatabaseModel::buildAddGameQuery(struct GameData game_data)

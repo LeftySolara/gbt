@@ -64,6 +64,8 @@ public:
     bool removeGame(int game_id);
 
 private:
+    void validateGameData(struct GameData game_data);
+
     QSqlQuery buildAddGameQuery(struct GameData game_data);
     QSqlQuery buildEditGameQuery(struct GameData game_data);
     bool executeQuery(QSqlQuery query);
