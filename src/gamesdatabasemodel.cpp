@@ -205,40 +205,7 @@ bool GamesDatabaseModel::editGame(struct GameData game_data)
     if (game_data.id < 0)  // Game doesn't exist
         return false;
 
-
-    QVariantMap query_data;
-    int status_id = game_data.status_id;
-    int series_id = getSeriesID(series);
-    int platform_id = getPlatformID(platform);
-
-    query_data.insert("name", game_data.title);
-    if (series_id >= 0)
-        query_data.insert("series_id", series_id);
-    if (status_id >= 0)
-        query_data.insert("status_id", status_id);
-    if (platform_id >= 0)
-        query_data.insert("platform_id", platform_id);
-
-    QStringList parameter_list;
-    for (QString param : query_data.keys())
-        parameter_list.append(param + " = :" + param);
-
-    QString parameters = parameter_list.join(", ");
-    QString query_string = "UPDATE games SET " + parameters + " WHERE id = :game_id";
-
-    QSqlQuery query(database());
-    query.prepare(query_string);
-
-    // We add this after everything else to keep the parameter count correct.
-    // Also, we don't want to change the game ID when editing entries.
-    query_data.insert("game_id", game_data.id);
-
-    auto i = query_data.constBegin();
-    while (i != query_data.constEnd()) {
-        query.bindValue(":" + i.key(), i.value());
-        ++i;
-    }
-
+    QSqlQuery query = buildEditGameQuery(game_data);
     return executeQuery(query);
 }
 
@@ -274,6 +241,44 @@ QSqlQuery GamesDatabaseModel::buildAddGameQuery(struct GameData game_data)
 
     QSqlQuery query(database());
     query.prepare(query_string);
+
+    auto i = query_data.constBegin();
+    while (i != query_data.constEnd()) {
+        query.bindValue(":" + i.key(), i.value());
+        ++i;
+    }
+
+    return query;
+}
+
+QSqlQuery GamesDatabaseModel::buildEditGameQuery(GameData game_data)
+{
+    QVariantMap query_data;
+    int status_id = game_data.status_id;
+    int series_id = getSeriesID(game_data.series);
+    int platform_id = getPlatformID(game_data.platform);
+
+    query_data.insert("name", game_data.title);
+    if (series_id >= 0)
+        query_data.insert("series_id", series_id);
+    if (status_id >= 0)
+        query_data.insert("status_id", status_id);
+    if (platform_id >= 0)
+        query_data.insert("platform_id", platform_id);
+
+    QStringList parameter_list;
+    for (QString param : query_data.keys())
+        parameter_list.append(param + " = :" + param);
+
+    QString parameters = parameter_list.join(", ");
+    QString query_string = "UPDATE games SET " + parameters + " WHERE id = :game_id";
+
+    QSqlQuery query(database());
+    query.prepare(query_string);
+
+    // We add this after everything else to keep the parameter count correct.
+    // Also, we don't want to change the game ID when editing entries.
+    query_data.insert("game_id", game_data.id);
 
     auto i = query_data.constBegin();
     while (i != query_data.constEnd()) {

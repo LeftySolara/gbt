@@ -65,6 +65,7 @@ public:
 
 private:
     QSqlQuery buildAddGameQuery(struct GameData game_data);
+    QSqlQuery buildEditGameQuery(struct GameData game_data);
     bool executeQuery(QSqlQuery query);
 };
 
