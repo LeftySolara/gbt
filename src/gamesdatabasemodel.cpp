@@ -214,7 +214,7 @@ bool GamesDatabaseModel::addGame(struct GameData game_data)
         ++i;
     }
 
-    return execute_query(query);
+    return executeQuery(query);
 }
 
 bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int status_id, int platform_id)
@@ -252,7 +252,7 @@ bool GamesDatabaseModel::editGame(int game_id, QString title, int series_id, int
         ++i;
     }
 
-    return execute_query(query);
+    return executeQuery(query);
 }
 
 bool GamesDatabaseModel::removeGame(int game_id)
@@ -261,10 +261,10 @@ bool GamesDatabaseModel::removeGame(int game_id)
     query.prepare("DELETE FROM games WHERE id = :game_id");
     query.bindValue(":game_id", game_id);
 
-    return execute_query(query);
+    return executeQuery(query);
 }
 
-bool GamesDatabaseModel::execute_query(QSqlQuery query)
+bool GamesDatabaseModel::executeQuery(QSqlQuery query)
 {
     query.exec();
 
