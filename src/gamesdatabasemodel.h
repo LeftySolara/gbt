@@ -64,6 +64,7 @@ public:
     bool removeGame(int game_id);
 
 private:
+    QSqlQuery buildAddGameQuery(struct GameData game_data);
     bool executeQuery(QSqlQuery query);
 };
 

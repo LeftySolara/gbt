@@ -185,35 +185,7 @@ bool GamesDatabaseModel::addGame(struct GameData game_data)
     if (!platform.isEmpty() && !hasPlatform(series))
         addPlatform(platform);
 
-
-    QVariantMap query_data;
-    int status_id = game_data.status_id;
-    int series_id = getSeriesID(series);
-    int platform_id = getPlatformID(platform);
-
-    query_data.insert("name", game_data.title);
-    if (series_id >= 0)
-        query_data.insert("series_id", series_id);
-    if (status_id >= 0)
-        query_data.insert("status_id", status_id);
-    if (platform_id >= 0)
-        query_data.insert("platform_id", platform_id);
-
-    QString parameters = query_data.keys().join(", ");
-    QString placeholders = query_data.keys().join(", :").prepend(':');
-
-    QString query_string = "INSERT INTO games (" + parameters + ") "
-            "VALUES (" + placeholders + ")";
-
-    QSqlQuery query(database());
-    query.prepare(query_string);
-
-    auto i = query_data.constBegin();
-    while (i != query_data.constEnd()) {
-        query.bindValue(":" + i.key(), i.value());
-        ++i;
-    }
-
+    QSqlQuery query = buildAddGameQuery(game_data);
     return executeQuery(query);
 }
 
@@ -279,6 +251,39 @@ bool GamesDatabaseModel::removeGame(int game_id)
     return executeQuery(query);
 }
 
+QSqlQuery GamesDatabaseModel::buildAddGameQuery(struct GameData game_data)
+{
+    QVariantMap query_data;
+    int status_id = game_data.status_id;
+    int series_id = getSeriesID(game_data.series);
+    int platform_id = getPlatformID(game_data.platform);
+
+    query_data.insert("name", game_data.title);
+    if (series_id >= 0)
+        query_data.insert("series_id", series_id);
+    if (status_id >= 0)
+        query_data.insert("status_id", status_id);
+    if (platform_id >= 0)
+        query_data.insert("platform_id", platform_id);
+
+    QString parameters = query_data.keys().join(", ");
+    QString placeholders = query_data.keys().join(", :").prepend(':');
+
+    QString query_string = "INSERT INTO games (" + parameters + ") "
+            "VALUES (" + placeholders + ")";
+
+    QSqlQuery query(database());
+    query.prepare(query_string);
+
+    auto i = query_data.constBegin();
+    while (i != query_data.constEnd()) {
+        query.bindValue(":" + i.key(), i.value());
+        ++i;
+    }
+
+    return query;
+}
+
 bool GamesDatabaseModel::executeQuery(QSqlQuery query)
 {
     query.exec();
@@ -290,3 +295,4 @@ bool GamesDatabaseModel::executeQuery(QSqlQuery query)
         return false;
     }
 }
+
