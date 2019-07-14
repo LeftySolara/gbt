@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Fri Jun 21 20:45:23 2019
+-- File generated with SQLiteStudio v3.2.1 on Sun Jul 14 16:25:32 2019
 --
 -- Text encoding used: UTF-8
 --
@@ -16,7 +16,20 @@ CREATE TABLE games (
     name        TEXT    NOT NULL ON CONFLICT ROLLBACK,
     status_id   INT     REFERENCES status (id),
     series_id   INT     REFERENCES series (id),
-    platform_id INT     REFERENCES platforms (id) 
+    platform_id INT     REFERENCES platforms (id),
+    genre_id    INT     REFERENCES genres (id) 
+);
+
+
+-- Table: genres
+DROP TABLE IF EXISTS genres;
+
+CREATE TABLE genres (
+    id   INTEGER PRIMARY KEY ASC ON CONFLICT ROLLBACK AUTOINCREMENT
+                 NOT NULL ON CONFLICT ROLLBACK
+                 DEFAULT (0),
+    name TEXT    UNIQUE ON CONFLICT ROLLBACK
+                 NOT NULL ON CONFLICT ROLLBACK
 );
 
 
@@ -55,16 +68,6 @@ CREATE TABLE status (
                  NOT NULL ON CONFLICT ROLLBACK
 );
 
-
-COMMIT TRANSACTION;
-PRAGMA foreign_keys = on;
-
-
-INSERT INTO status (id, name) VALUES (0, 'Not Started');
-INSERT INTO status (id, name) VALUES (1, 'Playing');
-INSERT INTO status (id, name) VALUES (2, 'Finished');
-INSERT INTO status (id, name) VALUES (3, 'On Hold');
-INSERT INTO status (id, name) VALUES (4, 'Dropped');
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

@@ -26,6 +26,7 @@
 
 #define SERIES_COLUMN 3
 #define PLATFORM_COLUMN 4
+#define GENRE_COLUMN 5
 
 DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     QDialog(parent),
@@ -36,6 +37,7 @@ DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     line_edit_title = ui->lineEditTitle;
     line_edit_series = ui->lineEditSeries;
     line_edit_platform = ui->lineEditPlatform;
+    line_edit_genre = ui->lineEditGenre;
 
     // We'll add options to the combo box using string literals.
     // We could set the combo box to use the database model, but that
@@ -48,6 +50,8 @@ DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     // To set up auto completions, we need to use a proxy model.
     // That way we can filter out duplicates without altering
     // the actual underlying data.
+    // Each LineEdit needs its own proxy model, otherwise the completion
+    // data gets combined and mixed up.
     series_proxy_model = new UniqueFilterModel(this);
     series_proxy_model->setSourceModel(model);
     series_proxy_model->setFilterKeyColumn(SERIES_COLUMN);
@@ -66,6 +70,16 @@ DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     platform_completer->setCompletionColumn(PLATFORM_COLUMN);
     platform_completer->setCaseSensitivity(Qt::CaseInsensitive);
     ui->lineEditPlatform->setCompleter(platform_completer);
+
+
+    genre_proxy_model = new UniqueFilterModel(this);
+    genre_proxy_model->setSourceModel(model);
+    genre_proxy_model->setFilterKeyColumn(GENRE_COLUMN);
+
+    genre_completer = new QCompleter(genre_proxy_model);
+    genre_completer->setCompletionColumn(GENRE_COLUMN);
+    genre_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    ui->lineEditGenre->setCompleter(genre_completer);
 }
 
 DialogAddGame::~DialogAddGame()
@@ -74,5 +88,7 @@ DialogAddGame::~DialogAddGame()
     delete series_proxy_model;
     delete platform_completer;
     delete platform_proxy_model;
+    delete genre_completer;
+    delete genre_proxy_model;
     delete ui;
 }

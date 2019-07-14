@@ -100,6 +100,25 @@ int GamesDatabaseModel::getPlatformID(QString platform)
     return -1;
 }
 
+int GamesDatabaseModel::getGenreID(QString genre)
+{
+    QSqlQuery query(database());
+    QString query_string = "SELECT * FROM genres WHERE name = '" + genre + "'";
+    query.exec(query_string);
+
+    if (query.next()) {
+        int id = query.value(0).toInt();
+        int next_id = getNextGenreID();
+
+        if (id >= next_id)  // Platform doesn't exist
+            return -1;
+        else
+            return id;
+    }
+
+    return -1;
+}
+
 int GamesDatabaseModel::getNextGameID()
 {
     QSqlQuery query(database());
@@ -133,6 +152,17 @@ int GamesDatabaseModel::getNextPlatformID()
         return -1;
 }
 
+int GamesDatabaseModel::getNextGenreID()
+{
+    QSqlQuery query(database());
+    query.exec("SELECT * FROM SQLITE_SEQUENCE WHERE name = 'genres'");
+
+    if (query.next())
+        return query.value(1).toInt() + 1;
+    else
+        return -1;
+}
+
 bool GamesDatabaseModel::hasGame(QString title)
 {
     return getGameID(title) >= 0;
@@ -146,6 +176,21 @@ bool GamesDatabaseModel::hasSeries(QString series)
 bool GamesDatabaseModel::hasPlatform(QString platform)
 {
     return getPlatformID(platform) >= 0;
+}
+
+bool GamesDatabaseModel::hasGenre(QString genre)
+{
+    return getGenreID(genre) >= 0;
+}
+
+bool GamesDatabaseModel::addGame(struct GameData game_data)
+{
+    if (hasGame(game_data.title))
+        return false;
+
+    validateGameData(game_data);
+    QSqlQuery query = buildAddGameQuery(game_data);
+    return executeQuery(query);
 }
 
 bool GamesDatabaseModel::addSeries(QString series)
@@ -172,14 +217,16 @@ bool GamesDatabaseModel::addPlatform(QString platform)
    return hasPlatform(platform);
 }
 
-bool GamesDatabaseModel::addGame(struct GameData game_data)
+bool GamesDatabaseModel::addGenre(QString genre)
 {
-    if (hasGame(game_data.title))
+    if (hasGenre(genre))
         return false;
 
-    validateGameData(game_data);
-    QSqlQuery query = buildAddGameQuery(game_data);
-    return executeQuery(query);
+    QSqlQuery query(database());
+    QString query_string = "INSERT INTO genres (name) VALUES ('" + genre + "')";
+    query.exec(query_string);
+
+    return hasGenre(genre);
 }
 
 bool GamesDatabaseModel::editGame(struct GameData game_data)
@@ -210,8 +257,12 @@ void GamesDatabaseModel::validateGameData(GameData game_data)
         addSeries(series);
 
     QString platform = game_data.platform;
-    if (!platform.isEmpty() && !hasPlatform(series))
+    if (!platform.isEmpty() && !hasPlatform(platform))
         addPlatform(platform);
+
+    QString genre = game_data.genre;
+    if (!genre.isEmpty() && !hasGenre(genre))
+        addGenre(genre);
 }
 
 QSqlQuery GamesDatabaseModel::buildAddGameQuery(struct GameData game_data)
@@ -220,6 +271,7 @@ QSqlQuery GamesDatabaseModel::buildAddGameQuery(struct GameData game_data)
     int status_id = game_data.status_id;
     int series_id = getSeriesID(game_data.series);
     int platform_id = getPlatformID(game_data.platform);
+    int genre_id = getGenreID(game_data.genre);
 
     query_data.insert("name", game_data.title);
     if (series_id >= 0)
@@ -228,6 +280,8 @@ QSqlQuery GamesDatabaseModel::buildAddGameQuery(struct GameData game_data)
         query_data.insert("status_id", status_id);
     if (platform_id >= 0)
         query_data.insert("platform_id", platform_id);
+    if (genre_id >= 0)
+        query_data.insert("genre_id", genre_id);
 
     QString parameters = query_data.keys().join(", ");
     QString placeholders = query_data.keys().join(", :").prepend(':');
@@ -253,6 +307,7 @@ QSqlQuery GamesDatabaseModel::buildEditGameQuery(GameData game_data)
     int status_id = game_data.status_id;
     int series_id = getSeriesID(game_data.series);
     int platform_id = getPlatformID(game_data.platform);
+    int genre_id = getGenreID(game_data.genre);
 
     query_data.insert("name", game_data.title);
     if (series_id >= 0)
@@ -261,6 +316,8 @@ QSqlQuery GamesDatabaseModel::buildEditGameQuery(GameData game_data)
         query_data.insert("status_id", status_id);
     if (platform_id >= 0)
         query_data.insert("platform_id", platform_id);
+    if (genre_id >= 0)
+        query_data.insert("genre_id", genre_id);
 
     QStringList parameter_list;
     for (QString param : query_data.keys())

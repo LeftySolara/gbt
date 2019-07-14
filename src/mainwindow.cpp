@@ -100,6 +100,7 @@ void MainWindow::addGame()
     game_data.series = dialog.line_edit_series->text();
     game_data.platform = dialog.line_edit_platform->text();
     game_data.status_id = dialog.combo_box_status->currentIndex();
+    game_data.genre = dialog.line_edit_genre->text();
 
     model->addGame(game_data);
     refreshTableView();
@@ -121,6 +122,7 @@ void MainWindow::editGame()
     game_data.title = dialog.line_edit_title->text();
     game_data.platform = dialog.line_edit_platform->text();
     game_data.status_id = dialog.combo_box_status->currentIndex();
+    game_data.genre = dialog.line_edit_genre->text();
 
     model->editGame(game_data);
     refreshTableView();
@@ -209,10 +211,12 @@ bool MainWindow::initializeDatabaseModel()
     model->setRelation(2, QSqlRelation("status", "id", "name"));
     model->setRelation(3, QSqlRelation("series", "id", "name"));
     model->setRelation(4, QSqlRelation("platforms", "id", "name"));
+    model->setRelation(5, QSqlRelation("genres", "id", "name"));
     model->setHeaderData(1, Qt::Horizontal, "Title");
     model->setHeaderData(2, Qt::Horizontal, "Status");
     model->setHeaderData(3, Qt::Horizontal, "Series");
     model->setHeaderData(4, Qt::Horizontal, "Platform");
+    model->setHeaderData(5, Qt::Horizontal, "Genre");
     model->select();
 
     return true;

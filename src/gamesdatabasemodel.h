@@ -33,6 +33,7 @@ struct GameData {
     QString title;
     QString series;
     QString platform;
+    QString genre;
 };
 
 class GamesDatabaseModel : public QSqlRelationalTableModel
@@ -46,18 +47,22 @@ public:
     int getGameID(QString title);
     int getSeriesID(QString series);
     int getPlatformID(QString platform);
+    int getGenreID(QString genre);
 
     int getNextGameID();
     int getNextSeriesID();
     int getNextPlatformID();
+    int getNextGenreID();
 
     bool hasGame(QString title);
     bool hasSeries(QString series);
     bool hasPlatform(QString platform);
+    bool hasGenre(QString genre);
 
+    bool addGame(struct GameData game_data);
     bool addSeries(QString series);
     bool addPlatform(QString platform);
-    bool addGame(struct GameData game_data);
+    bool addGenre(QString genre);
 
     bool editGame(struct GameData game_data);
 
