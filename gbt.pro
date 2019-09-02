@@ -27,29 +27,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        src/dbutils.cpp \
-        src/dialogaddgame.cpp \
-        src/dialogeditgame.cpp \
-        src/gamesdatabasemodel.cpp \
-        src/logutils.cpp \
+        src/database/dbutils.cpp \
+        src/ui/dialogaddgame.cpp \
+        src/ui/dialogeditgame.cpp \
+        src/database/gamesdatabasemodel.cpp \
+        src/logging/logutils.cpp \
         src/main.cpp \
-        src/mainwindow.cpp \
-        src/settings.cpp \
-        src/uniquefiltermodel.cpp
+        src/ui/mainwindow.cpp \
+        src/settings/settings.cpp \
+        src/ui/uniquefiltermodel.cpp
 
 HEADERS += \
-        src/dbutils.h \
-        src/dialogaddgame.h \
-        src/dialogeditgame.h \
-        src/gamesdatabasemodel.h \
-        src/logutils.h \
-        src/mainwindow.h \
-        src/settings.h \
-        src/uniquefiltermodel.h
+        src/database/dbutils.h \
+        src/ui/dialogaddgame.h \
+        src/ui/dialogeditgame.h \
+        src/database/gamesdatabasemodel.h \
+        src/logging/logutils.h \
+        src/ui/mainwindow.h \
+        src/settings/settings.h \
+        src/ui/uniquefiltermodel.h
 
 FORMS += \
-        src/dialogaddgame.ui \
-        src/mainwindow.ui
+        src/ui/dialogaddgame.ui \
+        src/ui/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
