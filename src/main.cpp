@@ -21,7 +21,8 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#include "mainwindow.h"
+#include "ui/mainwindow.h"
+
 #include <QApplication>
 
 int main(int argc, char *argv[])

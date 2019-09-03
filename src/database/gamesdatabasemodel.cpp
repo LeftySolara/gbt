@@ -23,12 +23,12 @@
 
 #include "gamesdatabasemodel.h"
 
+#include <QDebug>
 #include <QFile>
-#include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlQuery>
 #include <QTextStream>
 #include <QVector>
-#include <QDebug>
 
 GamesDatabaseModel::GamesDatabaseModel(QObject *parent, QSqlDatabase db)
     : QSqlRelationalTableModel(parent)

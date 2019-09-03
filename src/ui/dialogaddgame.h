@@ -24,13 +24,13 @@
 #ifndef DIALOGADDGAME_H
 #define DIALOGADDGAME_H
 
-#include "gamesdatabasemodel.h"
+#include "database/gamesdatabasemodel.h"
 #include "uniquefiltermodel.h"
 
-#include <QDialog>
-#include <QLineEdit>
 #include <QComboBox>
 #include <QCompleter>
+#include <QDialog>
+#include <QLineEdit>
 
 namespace Ui {
 class DialogAddGame;

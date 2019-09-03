@@ -22,11 +22,11 @@
  ***************************************************************************/
 
 #include "dbutils.h"
-#include "settings.h"
+#include "settings/settings.h"
 
 #include <QFile>
-#include <QTextStream>
 #include <QSqlQuery>
+#include <QTextStream>
 
 bool DBUtils::databaseFileExists()
 {

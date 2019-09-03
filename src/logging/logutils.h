@@ -25,8 +25,8 @@
 #define LOGUTILS_H
 
 #include <QApplication>
-#include <QStandardPaths>
 #include <QFile>
+#include <QStandardPaths>
 
 namespace LogUtils
 {

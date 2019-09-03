@@ -23,9 +23,9 @@
 
 #include "settings.h"
 
+#include <QFile>
 #include <QSettings>
 #include <QStandardPaths>
-#include <QFile>
 
 QString Settings::getDatabasePath()
 {

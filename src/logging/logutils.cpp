@@ -23,10 +23,10 @@
 
 #include "logutils.h"
 
-#include <QSettings>
 #include <QDateTime>
-#include <QTextStream>
 #include <QDir>
+#include <QSettings>
+#include <QTextStream>
 
 bool LogUtils::initLogging()
 {

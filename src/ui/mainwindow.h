@@ -24,11 +24,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "gamesdatabasemodel.h"
+#include "database/gamesdatabasemodel.h"
 
-#include <QMainWindow>
 #include <QAction>
 #include <QContextMenuEvent>
+#include <QMainWindow>
 #include <QSqlDatabase>
 #include <QTableView>
 

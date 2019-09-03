@@ -21,13 +21,13 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#include "mainwindow.h"
+#include "database/dbutils.h"
+#include "logging/logutils.h"
+#include "settings/settings.h"
+#include "ui/dialogaddgame.h"
+#include "ui/dialogeditgame.h"
+#include "ui/mainwindow.h"
 #include "ui_mainwindow.h"
-#include "logutils.h"
-#include "dbutils.h"
-#include "settings.h"
-#include "dialogaddgame.h"
-#include "dialogeditgame.h"
 
 #include <QMessageBox>
 
