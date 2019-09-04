@@ -40,10 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :
     createActions();
     createMenus();
 
-    if (!Settings::settingsFileExists())
-        Settings::applyDefaultSettings();
-
-    LogUtils::initLogging();
     initializeDatabaseModel();
 
     table_view = ui->tableView;

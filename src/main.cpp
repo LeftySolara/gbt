@@ -21,6 +21,8 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
+#include "logging/logutils.h"
+#include "settings/settings.h"
 #include "ui/mainwindow.h"
 
 #include <QApplication>
@@ -32,6 +34,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Jalen K Adams");
     QCoreApplication::setOrganizationDomain("jalenkadams.me");
     QCoreApplication::setApplicationName("gbt");
+
+    if (!Settings::settingsFileExists())
+        Settings::applyDefaultSettings();
+
+    LogUtils::initLogging();
 
     MainWindow w;
     w.show();
