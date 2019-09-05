@@ -178,11 +178,6 @@ void MainWindow::createMenus()
     help_menu->addAction(aboutQt_act);
 }
 
-bool MainWindow::isFirstRun()
-{
-    return (!Settings::settingsFileExists() && !DBUtils::databaseFileExists());
-}
-
 bool MainWindow::initializeDatabaseModel()
 {
     bool creating_new_database = !DBUtils::databaseFileExists();
@@ -197,25 +192,32 @@ bool MainWindow::initializeDatabaseModel()
         return false;
     }
 
-    model = new GamesDatabaseModel(nullptr, database);
-
+    // Call this after everything else since the database needs to be open first.
     if (creating_new_database)
         DBUtils::createDatabaseSchema();
 
+    model = new GamesDatabaseModel(nullptr, database);
     model->setTable("games");
     model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
+    setDatabaseModelRelations();
+
+    model->select();
+
+    return true;
+}
+
+void MainWindow::setDatabaseModelRelations()
+{
     model->setRelation(2, QSqlRelation("status", "id", "name"));
     model->setRelation(3, QSqlRelation("series", "id", "name"));
     model->setRelation(4, QSqlRelation("platforms", "id", "name"));
     model->setRelation(5, QSqlRelation("genres", "id", "name"));
+
     model->setHeaderData(1, Qt::Horizontal, "Title");
     model->setHeaderData(2, Qt::Horizontal, "Status");
     model->setHeaderData(3, Qt::Horizontal, "Series");
     model->setHeaderData(4, Qt::Horizontal, "Platform");
     model->setHeaderData(5, Qt::Horizontal, "Genre");
-    model->select();
-
-    return true;
 }
 
 void MainWindow::refreshTableView()

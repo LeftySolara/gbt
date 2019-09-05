@@ -60,8 +60,8 @@ private:
     void createActions();
     void createMenus();
 
-    bool isFirstRun();
     bool initializeDatabaseModel();
+    void setDatabaseModelRelations();
 
     void refreshTableView();
 
