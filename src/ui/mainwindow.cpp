@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle("Game Backlog Tracker");
+
     createActions();
     createMenus();
 
