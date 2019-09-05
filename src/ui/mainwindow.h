@@ -68,8 +68,8 @@ private:
     Ui::MainWindow *ui;
 
     QSqlDatabase database;
-    GamesDatabaseModel *model;
-    QTableView *table_view;
+    GamesDatabaseModel *database_model;
+    QTableView *library_view;
 
     QMenu *file_menu;
     QMenu *library_menu;

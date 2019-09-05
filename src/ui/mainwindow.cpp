@@ -42,18 +42,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initializeDatabaseModel();
 
-    table_view = ui->tableView;
-    table_view->setModel(model);
-    table_view->hideColumn(0);
-    table_view->sortByColumn(1, Qt::AscendingOrder);
-    table_view->resizeRowsToContents();
-    table_view->resizeColumnsToContents();
+    library_view = ui->tableView;
+    library_view->setModel(database_model);
+    library_view->hideColumn(0);
+    library_view->sortByColumn(1, Qt::AscendingOrder);
+    library_view->resizeRowsToContents();
+    library_view->resizeColumnsToContents();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete model;
+    delete database_model;
 
     delete exit_act;
     delete addGame_act;
@@ -86,7 +86,7 @@ void MainWindow::aboutQt()
 
 void MainWindow::addGame()
 {
-    DialogAddGame dialog(nullptr, model);
+    DialogAddGame dialog(nullptr, database_model);
 
     if (!dialog.exec())
         return;
@@ -98,14 +98,14 @@ void MainWindow::addGame()
     game_data.status_id = dialog.combo_box_status->currentIndex();
     game_data.genre = dialog.line_edit_genre->text();
 
-    model->addGame(game_data);
+    database_model->addGame(game_data);
     refreshTableView();
 }
 
 void MainWindow::editGame()
 {
-    QModelIndex index = table_view->currentIndex();
-    DialogEditGame dialog(nullptr, model, index);
+    QModelIndex index = library_view->currentIndex();
+    DialogEditGame dialog(nullptr, database_model, index);
 
     if (!dialog.exec())
         return;
@@ -113,20 +113,20 @@ void MainWindow::editGame()
     struct GameData game_data;
 
     // SQLite uses single quotes to enclose strings, so we need to escape them.
-    game_data.id = model->getGameID(dialog.line_edit_title->text().replace("'", "''"));
+    game_data.id = database_model->getGameID(dialog.line_edit_title->text().replace("'", "''"));
     game_data.series = dialog.line_edit_series->text().replace("'", "''");
     game_data.title = dialog.line_edit_title->text();
     game_data.platform = dialog.line_edit_platform->text();
     game_data.status_id = dialog.combo_box_status->currentIndex();
     game_data.genre = dialog.line_edit_genre->text();
 
-    model->editGame(game_data);
+    database_model->editGame(game_data);
     refreshTableView();
 }
 
 void MainWindow::removeGame()
 {
-    QModelIndex index = table_view->selectionModel()->currentIndex();
+    QModelIndex index = library_view->selectionModel()->currentIndex();
     QString game_title = index.sibling(index.row(), 1).data().toString();
 
     QMessageBox msg_box;
@@ -139,7 +139,7 @@ void MainWindow::removeGame()
         return;
 
     int game_id = index.sibling(index.row(), 0).data().toInt();
-    model->removeGame(game_id);
+    database_model->removeGame(game_id);
     refreshTableView();
 }
 
@@ -196,32 +196,32 @@ bool MainWindow::initializeDatabaseModel()
     if (creating_new_database)
         DBUtils::createDatabaseSchema();
 
-    model = new GamesDatabaseModel(nullptr, database);
-    model->setTable("games");
-    model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
+    database_model = new GamesDatabaseModel(nullptr, database);
+    database_model->setTable("games");
+    database_model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
     setDatabaseModelRelations();
 
-    model->select();
+    database_model->select();
 
     return true;
 }
 
 void MainWindow::setDatabaseModelRelations()
 {
-    model->setRelation(2, QSqlRelation("status", "id", "name"));
-    model->setRelation(3, QSqlRelation("series", "id", "name"));
-    model->setRelation(4, QSqlRelation("platforms", "id", "name"));
-    model->setRelation(5, QSqlRelation("genres", "id", "name"));
+    database_model->setRelation(2, QSqlRelation("status", "id", "name"));
+    database_model->setRelation(3, QSqlRelation("series", "id", "name"));
+    database_model->setRelation(4, QSqlRelation("platforms", "id", "name"));
+    database_model->setRelation(5, QSqlRelation("genres", "id", "name"));
 
-    model->setHeaderData(1, Qt::Horizontal, "Title");
-    model->setHeaderData(2, Qt::Horizontal, "Status");
-    model->setHeaderData(3, Qt::Horizontal, "Series");
-    model->setHeaderData(4, Qt::Horizontal, "Platform");
-    model->setHeaderData(5, Qt::Horizontal, "Genre");
+    database_model->setHeaderData(1, Qt::Horizontal, "Title");
+    database_model->setHeaderData(2, Qt::Horizontal, "Status");
+    database_model->setHeaderData(3, Qt::Horizontal, "Series");
+    database_model->setHeaderData(4, Qt::Horizontal, "Platform");
+    database_model->setHeaderData(5, Qt::Horizontal, "Genre");
 }
 
 void MainWindow::refreshTableView()
 {
-    model->select();
-    table_view->resizeRowsToContents();
+    database_model->select();
+    library_view->resizeRowsToContents();
 }
