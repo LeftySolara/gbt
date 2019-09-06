@@ -37,9 +37,9 @@ CREATE TABLE genres (
 );
 
 INSERT INTO genres (id, name) VALUES (-1, NULL);
-INSERT INTO genres (id, name) VALUES (0, 'Simulation');
-INSERT INTO genres (id, name) VALUES (1, 'Action/Adventure');
-INSERT INTO genres (id, name) VALUES (2, 'Action');
+INSERT INTO genres (id, name) VALUES (1, 'Simulation');
+INSERT INTO genres (id, name) VALUES (2, 'Action/Adventure');
+INSERT INTO genres (id, name) VALUES (3, 'Action');
 
 -- Table: platforms
 DROP TABLE IF EXISTS platforms;
@@ -52,9 +52,9 @@ CREATE TABLE platforms (
 );
 
 INSERT INTO platforms (id, name) VALUES (-1, NULL);
-INSERT INTO platforms (id, name) VALUES (0, 'Nintendo 3DS');
-INSERT INTO platforms (id, name) VALUES (1, 'PC');
-INSERT INTO platforms (id, name) VALUES (2, 'Nintendo Switch');
+INSERT INTO platforms (id, name) VALUES (1, 'Nintendo 3DS');
+INSERT INTO platforms (id, name) VALUES (2, 'PC');
+INSERT INTO platforms (id, name) VALUES (3, 'Nintendo Switch');
 
 -- Table: series
 DROP TABLE IF EXISTS series;
@@ -67,9 +67,9 @@ CREATE TABLE series (
 );
 
 INSERT INTO series (id, name) VALUES (-1, NULL);
-INSERT INTO series (id, name) VALUES (0, 'Animal Crossing');
-INSERT INTO series (id, name) VALUES (1, 'Yakuza');
-INSERT INTO series (id, name) VALUES (2, 'Monster Hunter');
+INSERT INTO series (id, name) VALUES (1, 'Animal Crossing');
+INSERT INTO series (id, name) VALUES (2, 'Yakuza');
+INSERT INTO series (id, name) VALUES (3, 'Monster Hunter');
 
 -- Table: status
 DROP TABLE IF EXISTS status;
