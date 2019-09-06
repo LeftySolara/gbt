@@ -310,14 +310,10 @@ QSqlQuery GamesDatabaseModel::buildEditGameQuery(GameData game_data)
     int genre_id = getGenreID(game_data.genre);
 
     query_data.insert("name", game_data.title);
-    if (series_id >= 0)
-        query_data.insert("series_id", series_id);
-    if (status_id >= 0)
-        query_data.insert("status_id", status_id);
-    if (platform_id >= 0)
-        query_data.insert("platform_id", platform_id);
-    if (genre_id >= 0)
-        query_data.insert("genre_id", genre_id);
+    query_data.insert("series_id", series_id);
+    query_data.insert("status_id", status_id);
+    query_data.insert("platform_id", platform_id);
+    query_data.insert("genre_id", genre_id);
 
     QStringList parameter_list;
     for (QString param : query_data.keys())

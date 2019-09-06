@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.2.1 on Sun Jul 14 16:25:32 2019
+-- File generated with SQLiteStudio v3.2.1 on Fri Sep 6 15:51:29 2019
 --
 -- Text encoding used: UTF-8
 --
@@ -17,7 +17,7 @@ CREATE TABLE games (
     status_id   INT     REFERENCES status (id),
     series_id   INT     REFERENCES series (id),
     platform_id INT     REFERENCES platforms (id),
-    genre_id    INT     REFERENCES genres (id) 
+    genre_id    INT     REFERENCES genres (id)
 );
 
 
@@ -29,9 +29,9 @@ CREATE TABLE genres (
                  NOT NULL ON CONFLICT ROLLBACK
                  DEFAULT (0),
     name TEXT    UNIQUE ON CONFLICT ROLLBACK
-                 NOT NULL ON CONFLICT ROLLBACK
 );
 
+INSERT INTO genres (id, name) VALUES (-1, NULL);
 
 -- Table: platforms
 DROP TABLE IF EXISTS platforms;
@@ -41,9 +41,9 @@ CREATE TABLE platforms (
                  NOT NULL ON CONFLICT ROLLBACK
                  DEFAULT (0),
     name TEXT    UNIQUE ON CONFLICT ROLLBACK
-                 NOT NULL ON CONFLICT ROLLBACK
 );
 
+INSERT INTO platforms (id, name) VALUES (-1, NULL);
 
 -- Table: series
 DROP TABLE IF EXISTS series;
@@ -53,9 +53,9 @@ CREATE TABLE series (
                  NOT NULL ON CONFLICT ROLLBACK
                  DEFAULT (0),
     name TEXT    UNIQUE ON CONFLICT ROLLBACK
-                 NOT NULL ON CONFLICT ROLLBACK
 );
 
+INSERT INTO series (id, name) VALUES (-1, NULL);
 
 -- Table: status
 DROP TABLE IF EXISTS status;
@@ -65,9 +65,9 @@ CREATE TABLE status (
                  NOT NULL ON CONFLICT ROLLBACK
                  DEFAULT (0),
     name         UNIQUE ON CONFLICT ROLLBACK
-                 NOT NULL ON CONFLICT ROLLBACK
 );
 
+INSERT INTO status (id, name) VALUES (-1, NULL);
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
