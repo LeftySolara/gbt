@@ -110,6 +110,7 @@ void MainWindow::addGame()
     game_data.platform = dialog.line_edit_platform->text();
     game_data.status_id = dialog.combo_box_status->currentIndex();
     game_data.genre = dialog.line_edit_genre->text();
+    game_data.art_path = dialog.line_edit_artwork->text();
 
     database_model->addGame(game_data);
     refreshTableView();
@@ -132,6 +133,7 @@ void MainWindow::editGame()
     game_data.platform = dialog.line_edit_platform->text();
     game_data.status_id = dialog.combo_box_status->currentIndex();
     game_data.genre = dialog.line_edit_genre->text();
+    game_data.art_path = dialog.line_edit_artwork->text();
 
     database_model->editGame(game_data);
     refreshTableView();

@@ -34,6 +34,7 @@ struct GameData {
     QString series;
     QString platform;
     QString genre;
+    QString art_path;
 };
 
 class GamesDatabaseModel : public QSqlRelationalTableModel

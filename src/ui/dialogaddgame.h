@@ -24,13 +24,16 @@
 #ifndef DIALOGADDGAME_H
 #define DIALOGADDGAME_H
 
-#include "database/gamesdatabasemodel.h"
-#include "uniquefiltermodel.h"
 
+#include <QAction>
 #include <QComboBox>
 #include <QCompleter>
 #include <QDialog>
 #include <QLineEdit>
+#include <QPushButton>
+
+#include "database/gamesdatabasemodel.h"
+#include "uniquefiltermodel.h"
 
 namespace Ui {
 class DialogAddGame;
@@ -48,6 +51,8 @@ public:
     QLineEdit *line_edit_series;
     QLineEdit *line_edit_platform;
     QLineEdit *line_edit_genre;
+    QLineEdit *line_edit_artwork;
+    QPushButton *button_browse;
     QComboBox *combo_box_status;
 
 protected:
@@ -59,6 +64,9 @@ protected:
     UniqueFilterModel *platform_proxy_model;
     UniqueFilterModel *genre_proxy_model;
     Ui::DialogAddGame *ui;
+
+private slots:
+    void browseFiles();
 };
 
 #endif // DIALOGADDGAME_H

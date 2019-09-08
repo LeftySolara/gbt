@@ -282,6 +282,8 @@ QSqlQuery GamesDatabaseModel::buildAddGameQuery(struct GameData game_data)
         query_data.insert("platform_id", platform_id);
     if (genre_id >= 0)
         query_data.insert("genre_id", genre_id);
+    if (!game_data.art_path.isEmpty())
+        query_data.insert("art_path", game_data.art_path);
 
     QString parameters = query_data.keys().join(", ");
     QString placeholders = query_data.keys().join(", :").prepend(':');
@@ -314,6 +316,7 @@ QSqlQuery GamesDatabaseModel::buildEditGameQuery(GameData game_data)
     query_data.insert("status_id", status_id);
     query_data.insert("platform_id", platform_id);
     query_data.insert("genre_id", genre_id);
+    query_data.insert("art_path", game_data.art_path);
 
     QStringList parameter_list;
     for (QString param : query_data.keys())

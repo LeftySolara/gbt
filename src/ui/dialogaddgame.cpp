@@ -24,6 +24,9 @@
 #include "dialogaddgame.h"
 #include "ui_dialogaddgame.h"
 
+#include <QFileDialog>
+#include <QSettings>
+
 #define SERIES_COLUMN 3
 #define PLATFORM_COLUMN 4
 #define GENRE_COLUMN 5
@@ -33,11 +36,17 @@ DialogAddGame::DialogAddGame(QWidget *parent, GamesDatabaseModel *model) :
     ui(new Ui::DialogAddGame)
 {
     ui->setupUi(this);
+
     combo_box_status = ui->comboBoxStatus;
     line_edit_title = ui->lineEditTitle;
     line_edit_series = ui->lineEditSeries;
     line_edit_platform = ui->lineEditPlatform;
     line_edit_genre = ui->lineEditGenre;
+    line_edit_artwork = ui->lineEditArtPath;
+    button_browse = ui->pushButtonBrowse;
+
+    // Action for displaying a file browser to select cover art.
+    connect(button_browse, SIGNAL(clicked()), this, SLOT(browseFiles()));
 
     // We'll add options to the combo box using string literals.
     // We could set the combo box to use the database model, but that
@@ -91,4 +100,15 @@ DialogAddGame::~DialogAddGame()
     delete genre_completer;
     delete genre_proxy_model;
     delete ui;
+}
+
+void DialogAddGame::browseFiles()
+{
+    QSettings settings;
+    QString art_dir = settings.value("art/directory").toString();
+
+    QString art_path = QFileDialog::getOpenFileName(this,
+        tr("Select Image"), art_dir, tr("Image Files (*.png *.jpg *.jpeg *.bmp)"));
+
+    line_edit_artwork->setText(art_path);
 }
