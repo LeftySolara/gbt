@@ -240,4 +240,5 @@ void MainWindow::refreshTableView()
 {
     database_model->select();
     library_view->resizeRowsToContents();
+    library_view->resizeColumnsToContents();
 }

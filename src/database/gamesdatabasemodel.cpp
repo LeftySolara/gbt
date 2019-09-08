@@ -25,6 +25,8 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QImage>
+#include <QPixmap>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QTextStream>
@@ -39,6 +41,23 @@ QVariant GamesDatabaseModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
+
+    // Display cover art in the view directly
+    if (index.column() == 6) {
+        QString img_file_path = QSqlRelationalTableModel::data(index, Qt::DisplayRole).toString();
+
+        if (role == Qt::DisplayRole)
+            return QString();
+
+        QImage image(img_file_path);
+        QPixmap pixmap = QPixmap::fromImage(
+                    image.scaledToHeight(100, Qt::SmoothTransformation));
+
+        if (role == Qt::DecorationRole)
+            return pixmap;
+        if (role == Qt::SizeHintRole)
+            return pixmap.size();
+    }
 
     return QSqlRelationalTableModel::data(index, role);
 }
