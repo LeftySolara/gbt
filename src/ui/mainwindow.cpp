@@ -21,21 +21,29 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
+#include "ui/mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include <QDir>
+#include <QMessageBox>
+#include <QSettings>
+
 #include "database/dbutils.h"
 #include "logging/logutils.h"
 #include "settings/settings.h"
 #include "ui/dialogaddgame.h"
 #include "ui/dialogeditgame.h"
-#include "ui/mainwindow.h"
-#include "ui_mainwindow.h"
-
-#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QSettings settings;
+    QString art_path = settings.value("art/directory").toString();
+    if (!QDir(art_path).exists())
+        QDir().mkpath(art_path);
 
     setWindowTitle("Game Backlog Tracker");
 
@@ -223,7 +231,7 @@ void MainWindow::setDatabaseModelRelations()
     database_model->setHeaderData(3, Qt::Horizontal, "Series");
     database_model->setHeaderData(4, Qt::Horizontal, "Platform");
     database_model->setHeaderData(5, Qt::Horizontal, "Genre");
-    database_model->setHeaderData(6, Qt::Horizontal, "Cover Art");
+    database_model->setHeaderData(6, Qt::Horizontal, "Cover Art", Qt::DecorationRole);
 }
 
 void MainWindow::refreshTableView()

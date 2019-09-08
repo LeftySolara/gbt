@@ -43,6 +43,7 @@ void Settings::applyDefaultSettings()
     settings.setValue("database/directory", data_path);
     settings.setValue("log/fileName", "gbt.log");
     settings.setValue("log/directory", data_path);
+    settings.setValue("art/directory", data_path + "/" + "cover_art");
 }
 
 bool Settings::settingsFileExists()
