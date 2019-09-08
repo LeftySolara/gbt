@@ -17,7 +17,8 @@ CREATE TABLE games (
     status_id   INT     REFERENCES status (id),
     series_id   INT     REFERENCES series (id),
     platform_id INT     REFERENCES platforms (id),
-    genre_id    INT     REFERENCES genres (id)
+    genre_id    INT     REFERENCES genres (id),
+    art_path    TEXT
 );
 
 INSERT INTO games (id, name, status_id, series_id, platform_id, genre_id) VALUES (1, 'Animal Crossing: New Leaf', 1, 1, 1, 1);

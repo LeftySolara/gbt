@@ -17,7 +17,8 @@ CREATE TABLE games (
     status_id   INT     REFERENCES status (id),
     series_id   INT     REFERENCES series (id),
     platform_id INT     REFERENCES platforms (id),
-    genre_id    INT     REFERENCES genres (id)
+    genre_id    INT     REFERENCES genres (id),
+    art_path    TEXT
 );
 
 

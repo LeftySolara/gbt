@@ -223,6 +223,7 @@ void MainWindow::setDatabaseModelRelations()
     database_model->setHeaderData(3, Qt::Horizontal, "Series");
     database_model->setHeaderData(4, Qt::Horizontal, "Platform");
     database_model->setHeaderData(5, Qt::Horizontal, "Genre");
+    database_model->setHeaderData(6, Qt::Horizontal, "Cover Art");
 }
 
 void MainWindow::refreshTableView()
