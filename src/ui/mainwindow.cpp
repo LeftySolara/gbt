@@ -50,6 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
     library_view->sortByColumn(1, Qt::AscendingOrder);
     library_view->resizeRowsToContents();
     library_view->resizeColumnsToContents();
+
+    QHeaderView *header = library_view->horizontalHeader();
+    header->setStretchLastSection(true);
 }
 
 MainWindow::~MainWindow()
