@@ -61,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QHeaderView *header = library_view->horizontalHeader();
     header->setStretchLastSection(true);
+    header->moveSection(DBUtils::Column::ART_PATH, 0);
 }
 
 MainWindow::~MainWindow()

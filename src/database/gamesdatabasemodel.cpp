@@ -32,6 +32,8 @@
 #include <QTextStream>
 #include <QVector>
 
+#include "dbutils.h"
+
 GamesDatabaseModel::GamesDatabaseModel(QObject *parent, QSqlDatabase db)
     : QSqlRelationalTableModel(parent)
 {
@@ -43,7 +45,7 @@ QVariant GamesDatabaseModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     // Display cover art in the view directly
-    if (index.column() == 6) {
+    if (index.column() == DBUtils::Column::ART_PATH) {
         QString img_file_path = QSqlRelationalTableModel::data(index, Qt::DisplayRole).toString();
 
         if (role == Qt::DisplayRole)
