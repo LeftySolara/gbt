@@ -25,8 +25,47 @@
 #define DBUTILS_H
 
 #include <QSqlDatabase>
+#include <QStringList>
 
 namespace DBUtils {
+
+enum Column {
+    ID,
+    NAME,
+    STATUS,
+    SERIES,
+    PLATFORM,
+    GENRE,
+    ART_PATH
+};
+
+static QStringList column_names = {
+    "id",
+    "name",
+    "status_id",
+    "series_id",
+    "platform_id",
+    "genre_id",
+    "art_path"
+};
+
+static QStringList column_headers = {
+    "ID",
+    "Title",
+    "Status",
+    "Series",
+    "Platform",
+    "Genre",
+    "Box Art"
+};
+
+static QStringList table_names = {
+    "games",
+    "status",
+    "series",
+    "platforms",
+    "genres"
+};
 
 bool databaseFileExists();
 

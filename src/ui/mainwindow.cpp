@@ -215,6 +215,7 @@ bool MainWindow::initializeDatabaseModel()
     database_model->setTable("games");
     database_model->setJoinMode(QSqlRelationalTableModel::LeftJoin);
     setDatabaseModelRelations();
+    setDatabaseModelHeaders();
 
     database_model->select();
 
@@ -223,17 +224,30 @@ bool MainWindow::initializeDatabaseModel()
 
 void MainWindow::setDatabaseModelRelations()
 {
-    database_model->setRelation(2, QSqlRelation("status", "id", "name"));
-    database_model->setRelation(3, QSqlRelation("series", "id", "name"));
-    database_model->setRelation(4, QSqlRelation("platforms", "id", "name"));
-    database_model->setRelation(5, QSqlRelation("genres", "id", "name"));
+    int first_column = DBUtils::Column::STATUS;
+    int last_column = DBUtils::Column::GENRE;
+    QString table_name;
 
-    database_model->setHeaderData(1, Qt::Horizontal, "Title");
-    database_model->setHeaderData(2, Qt::Horizontal, "Status");
-    database_model->setHeaderData(3, Qt::Horizontal, "Series");
-    database_model->setHeaderData(4, Qt::Horizontal, "Platform");
-    database_model->setHeaderData(5, Qt::Horizontal, "Genre");
-    database_model->setHeaderData(6, Qt::Horizontal, "Cover Art", Qt::DecorationRole);
+    for (int column = first_column; column <= last_column; ++column) {
+        table_name = DBUtils::table_names[column-1];
+        database_model->setRelation(column, QSqlRelation(table_name, "id", "name"));
+    }
+}
+
+void MainWindow::setDatabaseModelHeaders()
+{
+    int first_column = DBUtils::Column::ID;
+    int last_column = DBUtils::Column::ART_PATH;
+    QString header;
+
+    for (int column = first_column; column <= last_column; ++column) {
+        header = DBUtils::column_headers[column];
+
+        if (column == DBUtils::Column::ART_PATH)
+            database_model->setHeaderData(column, Qt::Horizontal, header, Qt::DecorationRole);
+        else
+            database_model->setHeaderData(column, Qt::Horizontal, header);
+    }
 }
 
 void MainWindow::refreshTableView()

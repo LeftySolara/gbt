@@ -62,6 +62,7 @@ private:
 
     bool initializeDatabaseModel();
     void setDatabaseModelRelations();
+    void setDatabaseModelHeaders();
 
     void refreshTableView();
 
