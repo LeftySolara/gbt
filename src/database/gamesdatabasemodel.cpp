@@ -64,6 +64,17 @@ QVariant GamesDatabaseModel::data(const QModelIndex &index, int role) const
     return QSqlRelationalTableModel::data(index, role);
 }
 
+QVariant GamesDatabaseModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::TextAlignmentRole)
+        return Qt::AlignCenter;
+
+    if (section == DBUtils::Column::ART_PATH)
+        return "Artwork";
+
+    return QSqlRelationalTableModel::headerData(section, orientation, role);
+}
+
 int GamesDatabaseModel::getGameID(QString title)
 {
     QSqlQuery query(database());
