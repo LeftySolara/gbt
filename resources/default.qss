@@ -1,3 +1,7 @@
+QHeaderView {
+    font-size: 11pt;
+}
+
 QTableView::item {
     padding: 10px;
 }
