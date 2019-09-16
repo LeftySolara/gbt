@@ -26,6 +26,7 @@
 #include "ui/mainwindow.h"
 
 #include <QApplication>
+#include <QFile>
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +40,11 @@ int main(int argc, char *argv[])
         Settings::applyDefaultSettings();
 
     LogUtils::initLogging();
+
+    QFile stylesheet(":/stylesheets/default.qss");
+    stylesheet.open(QFile::ReadOnly);
+    a.setStyleSheet(stylesheet.readAll());
+    stylesheet.close();
 
     MainWindow w;
     w.show();
