@@ -25,9 +25,11 @@ INCLUDEPATH += src include
 
 SOURCES += \
     src/main.cpp \
+    src/log/log.cpp \
     src/ui/mainwindow.cpp
 
 HEADERS += \
+    include/gbt/log.h \
     src/ui/mainwindow.h
 
 FORMS += \

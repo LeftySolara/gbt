@@ -1,5 +1,5 @@
 /******************************************************************************
- * main.cpp : Entry point for the program
+ * log.h : Functions for outputting log messages
  * ****************************************************************************
  * Copyright (C) 2020 Jalen Adams
  *
@@ -21,22 +21,27 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#include "ui/mainwindow.h"
-#include "gbt/log.h"
+#ifndef LOG_H
+#define LOG_H
 
 #include <QApplication>
+#include <QMap>
 
-int main(int argc, char *argv[])
+namespace Log
 {
-    QApplication a(argc, argv);
+static QString log_path;
 
-    Log::initLogging();
+static const QMap<QtMsgType, QString> msg_type_str = {
+    {QtDebugMsg,    "DEBUG"},
+    {QtInfoMsg,     "INFO"},
+    {QtWarningMsg,  "WARN"},
+    {QtCriticalMsg, "CRITICAL"},
+    {QtFatalMsg,    "FATAL"}
+};
 
-    MainWindow w;
-    w.show();
-
-    int rc = a.exec();
-
-    Log::endLogging();
-    return rc;
+bool initLogging();
+void endLogging();
+void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 }
+
+#endif // LOG_H
