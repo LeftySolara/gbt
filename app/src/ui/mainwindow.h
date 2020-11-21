@@ -38,6 +38,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_actionQuit_triggered();
+    void on_actionAbout_Qt_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
