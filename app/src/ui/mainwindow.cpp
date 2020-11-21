@@ -46,3 +46,11 @@ void MainWindow::on_actionQuit_triggered()
 
     QApplication::exit();
 }
+
+/**
+ * @brief Displays the "About Qt" dialog.
+ */
+void MainWindow::on_actionAbout_Qt_triggered()
+{
+   QApplication::aboutQt();
+}
