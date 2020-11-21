@@ -29,6 +29,8 @@
 #include <QStandardPaths>
 #include <QTextStream>
 
+Q_LOGGING_CATEGORY(LOG_GBT, "gbt", QtDebugMsg);
+
 bool Log::initLogging()
 {
     QString log_dir_name = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
