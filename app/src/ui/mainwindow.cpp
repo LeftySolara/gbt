@@ -21,6 +21,8 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
+#include "gbt/log.h"
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -36,3 +38,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/**
+ * @brief Exits the application.
+ */
+void MainWindow::on_actionQuit_triggered()
+{
+
+    QApplication::exit();
+}
