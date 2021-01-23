@@ -25,7 +25,10 @@
 #define LOG_H
 
 #include <QApplication>
+#include <QLoggingCategory>
 #include <QMap>
+
+Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
 
 namespace Log
 {

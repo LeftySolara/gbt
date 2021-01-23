@@ -43,7 +43,7 @@ MainWindow::~MainWindow()
  */
 void MainWindow::on_actionQuit_triggered()
 {
-    qDebug("Exit request received. Closing application...");
+    qCDebug(LOG_GBT) << "Exit request received. Closing application...";
     QApplication::exit();
 }
 
