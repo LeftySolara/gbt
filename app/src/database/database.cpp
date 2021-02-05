@@ -1,7 +1,7 @@
 /******************************************************************************
- * log.h : Functions for outputting log messages
+ * database.cpp : Functions for managing the application database
  * ****************************************************************************
- * Copyright (C) 2020 Jalen Adams
+ * Copyright (C) 2021 Jalen Adams
  *
  * Authors: Jalen Adams <jalen@jalenkadams.me>
  *
@@ -21,30 +21,34 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#include <QFile>
 
-#include <QtWidgets/QApplication>
-#include <QLoggingCategory>
-#include <QMap>
+#include "gbt/database.h"
+#include "gbt/log.h"
 
-Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
+const QString Database::db_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
+                                    + "/gbt/gbt.sqlite3";
 
-namespace Log
+Database::Database()
 {
-static QString log_path;
+    if (!exists()) {
+        qCInfo(LOG_GBT) << "No application database found. Creating...";
 
-static const QMap<QtMsgType, QString> msg_type_str = {
-    {QtDebugMsg,    "DEBUG"},
-    {QtInfoMsg,     "INFO"},
-    {QtWarningMsg,  "WARN"},
-    {QtCriticalMsg, "CRITICAL"},
-    {QtFatalMsg,    "FATAL"}
-};
+        QFile db_file(db_path);
+        db_file.open(QIODevice::ReadWrite);
+        db_file.close();
 
-bool initLogging();
-void endLogging();
-void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+        // TODO: run SQL script to set up schema
+        qCInfo(LOG_GBT) << "Database created successfully.";
+    }
 }
 
-#endif // LOG_H
+/**
+ * @brief Checks whether the database exists.
+ * @return true if the database exists, false otherwise.
+ */
+bool Database::exists()
+{
+    QFile db_file(db_path);
+    return db_file.exists();
+}

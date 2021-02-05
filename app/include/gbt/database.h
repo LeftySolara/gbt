@@ -1,7 +1,7 @@
 /******************************************************************************
- * log.h : Functions for outputting log messages
+ * database.h : Functions for managing the application database
  * ****************************************************************************
- * Copyright (C) 2020 Jalen Adams
+ * Copyright (C) 2021 Jalen Adams
  *
  * Authors: Jalen Adams <jalen@jalenkadams.me>
  *
@@ -21,30 +21,26 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#ifndef DATABASE_H
+#define DATABASE_H
 
-#include <QtWidgets/QApplication>
-#include <QLoggingCategory>
-#include <QMap>
+#include <QSqlDatabase>
+#include <QStandardPaths>
 
-Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
-
-namespace Log
+class Database
 {
-static QString log_path;
+public:
+    Database();
 
-static const QMap<QtMsgType, QString> msg_type_str = {
-    {QtDebugMsg,    "DEBUG"},
-    {QtInfoMsg,     "INFO"},
-    {QtWarningMsg,  "WARN"},
-    {QtCriticalMsg, "CRITICAL"},
-    {QtFatalMsg,    "FATAL"}
+    bool exists();
+
+private:
+    bool createDatabase();
+
+    QSqlDatabase db;
+    static const QString db_path;
 };
 
-bool initLogging();
-void endLogging();
-void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-}
+bool exists();
 
-#endif // LOG_H
+#endif // DATABASE_H

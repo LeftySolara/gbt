@@ -24,11 +24,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += src include
 
 SOURCES += \
+    src/database/database.cpp \
     src/main.cpp \
     src/log/log.cpp \
     src/ui/mainwindow.cpp
 
 HEADERS += \
+    include/gbt/database.h \
     include/gbt/log.h \
     src/ui/mainwindow.h
 
