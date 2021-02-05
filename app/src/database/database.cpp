@@ -31,24 +31,18 @@ const QString Database::db_path = QStandardPaths::writableLocation(QStandardPath
 
 Database::Database()
 {
-    if (!exists()) {
-        qCInfo(LOG_GBT) << "No application database found. Creating...";
+    // Use the default database connection.
+    // The QSQLITE driver automatically creates the database file if it does not exist.
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(db_path);
 
-        QFile db_file(db_path);
-        db_file.open(QIODevice::ReadWrite);
-        db_file.close();
-
-        // TODO: run SQL script to set up schema
-        qCInfo(LOG_GBT) << "Database created successfully.";
+    if (!db.open()) {
+        qCCritical(LOG_GBT) << "ERROR: Unable to open application database";
     }
 }
 
-/**
- * @brief Checks whether the database exists.
- * @return true if the database exists, false otherwise.
- */
-bool Database::exists()
+Database::~Database()
 {
-    QFile db_file(db_path);
-    return db_file.exists();
+    QSqlDatabase db = QSqlDatabase::database();
+    db.close();
 }

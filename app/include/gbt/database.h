@@ -27,17 +27,15 @@
 #include <QSqlDatabase>
 #include <QStandardPaths>
 
+/**
+ * @brief Wrapper for SQLite database interactions.
+ */
 class Database
 {
 public:
     Database();
+    ~Database();
 
-    bool exists();
-
-private:
-    bool createDatabase();
-
-    QSqlDatabase db;
     static const QString db_path;
 };
 

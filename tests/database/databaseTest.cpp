@@ -12,7 +12,6 @@ public:
 private slots:
     void initTestCase();
     void cleanupTestCase();
-    void test_path();
 
 private:
     Database db;
@@ -35,11 +34,6 @@ void databaseTest::initTestCase()
 void databaseTest::cleanupTestCase()
 {
 
-}
-
-void databaseTest::test_path()
-{
-    QVERIFY(db.exists());
 }
 
 QTEST_APPLESS_MAIN(databaseTest)
