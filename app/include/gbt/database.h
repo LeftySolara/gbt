@@ -27,8 +27,8 @@
 #include <QSqlDatabase>
 #include <QStandardPaths>
 
-static const QString default_db_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
-                                           + "/gbt/gbt.sqlite3";
+static const QString default_db_path =
+        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/gbt/gbt.sqlite3";
 
 /**
  * @brief Wrapper for SQLite database interactions.

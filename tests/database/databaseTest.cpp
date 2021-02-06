@@ -21,25 +21,13 @@ private:
     Database db;
 };
 
-databaseTest::databaseTest()
-{
+databaseTest::databaseTest() { }
 
-}
+databaseTest::~databaseTest() { }
 
-databaseTest::~databaseTest()
-{
+void databaseTest::initTestCase() { }
 
-}
-
-void databaseTest::initTestCase()
-{
-
-}
-
-void databaseTest::cleanupTestCase()
-{
-
-}
+void databaseTest::cleanupTestCase() { }
 
 void databaseTest::test_databaseDefaultPath()
 {

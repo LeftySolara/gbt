@@ -12,28 +12,18 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void test_case1();
-
 };
 
-settingsTest::settingsTest()
-{
+settingsTest::settingsTest() { }
 
-}
-
-settingsTest::~settingsTest()
-{
-
-}
+settingsTest::~settingsTest() { }
 
 void settingsTest::initTestCase()
 {
     qDebug("Test case initialized.");
 }
 
-void settingsTest::cleanupTestCase()
-{
-
-}
+void settingsTest::cleanupTestCase() { }
 
 void settingsTest::test_case1()
 {

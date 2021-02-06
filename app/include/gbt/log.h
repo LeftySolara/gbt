@@ -30,17 +30,14 @@
 
 Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
 
-namespace Log
-{
+namespace Log {
 static QString log_path;
 
-static const QMap<QtMsgType, QString> msg_type_str = {
-    {QtDebugMsg,    "DEBUG"},
-    {QtInfoMsg,     "INFO"},
-    {QtWarningMsg,  "WARN"},
-    {QtCriticalMsg, "CRITICAL"},
-    {QtFatalMsg,    "FATAL"}
-};
+static const QMap<QtMsgType, QString> msg_type_str = { { QtDebugMsg, "DEBUG" },
+                                                       { QtInfoMsg, "INFO" },
+                                                       { QtWarningMsg, "WARN" },
+                                                       { QtCriticalMsg, "CRITICAL" },
+                                                       { QtFatalMsg, "FATAL" } };
 
 bool initLogging();
 void endLogging();
