@@ -26,12 +26,13 @@
 #include "gbt/database.h"
 #include "gbt/log.h"
 
-const QString Database::db_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
-                                    + "/gbt/gbt.sqlite3";
-
-Database::Database()
+Database::Database(const QString db_path)
 {
-    // Use the default database connection.
+    // Check whether the default connection already exists.
+    if (QSqlDatabase::contains()) {
+        return;
+    }
+
     // The QSQLITE driver automatically creates the database file if it does not exist.
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(db_path);
@@ -43,6 +44,24 @@ Database::Database()
 
 Database::~Database()
 {
+    close();
+}
+
+/**
+ * @brief Closes the active database connection.
+ */
+void Database::close()
+{
     QSqlDatabase db = QSqlDatabase::database();
     db.close();
+}
+
+/**
+ * @brief Checks whether the database connection is open.
+ * @return true if the database is open, false otherwise
+ */
+bool Database::isOpen()
+{
+    QSqlDatabase db = QSqlDatabase::database();
+    return db.isOpen();
 }
