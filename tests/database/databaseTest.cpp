@@ -17,15 +17,23 @@ private slots:
     void test_databaseDefaultPath();
     void test_databaseCustomPath();
 
+    void test_runMigration();
+
 private:
-    Database db;
+    QString dir_path;
 };
 
 databaseTest::databaseTest() { }
 
 databaseTest::~databaseTest() { }
 
-void databaseTest::initTestCase() { }
+void databaseTest::initTestCase()
+{
+    QTemporaryDir dir;
+    dir.setAutoRemove(false);
+    dir_path = dir.path();
+    qDebug() << "Temporary directory: " + dir_path;
+}
 
 void databaseTest::cleanupTestCase() { }
 
@@ -39,13 +47,16 @@ void databaseTest::test_databaseDefaultPath()
 
 void databaseTest::test_databaseCustomPath()
 {
-    QTemporaryDir dir;
-    qDebug() << "Temporary directory: " + dir.path();
-    if (dir.isValid()) {
-        Database db = Database(dir.path() + "/test_db.sqlite3");
-        QVERIFY(db.isOpen());
-        db.close();
-    }
+    Database db = Database(dir_path + "/test_db.sqlite3");
+    QVERIFY(db.isOpen());
+    db.close();
+}
+
+void databaseTest::test_runMigration()
+{
+    Database db = Database(dir_path + "/test_runMigration.sqlite3");
+    QVERIFY(db.schemaVersion() == 0);
+    db.close();
 }
 
 QTEST_APPLESS_MAIN(databaseTest)

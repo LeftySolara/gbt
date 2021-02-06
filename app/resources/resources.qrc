@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/migrations">
+        <file alias="000">migrations/000_initialize_db.sql</file>
+    </qresource>
+</RCC>

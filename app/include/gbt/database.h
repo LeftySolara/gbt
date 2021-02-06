@@ -30,6 +30,8 @@
 static const QString default_db_path =
         QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/gbt/gbt.sqlite3";
 
+static const QString migration_prefix = ":/migrations";
+
 /**
  * @brief Wrapper for SQLite database interactions.
  */
@@ -40,7 +42,12 @@ public:
     ~Database();
 
     void close();
+
+    bool run_migration(const QString &script_path) const;
+    void update_schema(const unsigned int &version) const;
+
     bool isOpen();
+    unsigned int schemaVersion() const;
 
 private:
     QString connection_name;

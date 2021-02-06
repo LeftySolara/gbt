@@ -12,3 +12,5 @@ INCLUDEPATH += ../../app/include
 SOURCES +=  databaseTest.cpp \
     ../../app/src/log/log.cpp \
     ../../app/src/database/database.cpp
+
+RESOURCES += ../../app/resources/resources.qrc
