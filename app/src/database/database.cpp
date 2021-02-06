@@ -28,13 +28,18 @@
 
 Database::Database(const QString db_path)
 {
-    // Check whether the default connection already exists.
+    // If the default connection already exists, remove it
+    // to allow for updating the file path if necessary.
     if (QSqlDatabase::contains()) {
-        return;
+        QSqlDatabase db = QSqlDatabase::database();
+        connection_name = db.connectionName();
+        close();
     }
+    QSqlDatabase::removeDatabase(connection_name);
 
     // The QSQLITE driver automatically creates the database file if it does not exist.
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    connection_name = db.connectionName();
     db.setDatabaseName(db_path);
 
     if (!db.open()) {
@@ -45,6 +50,7 @@ Database::Database(const QString db_path)
 Database::~Database()
 {
     close();
+    QSqlDatabase::removeDatabase(connection_name);
 }
 
 /**
@@ -55,7 +61,6 @@ void Database::close()
     QSqlDatabase db = QSqlDatabase::database();
     db.close();
 }
-
 /**
  * @brief Checks whether the database connection is open.
  * @return true if the database is open, false otherwise

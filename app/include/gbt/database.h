@@ -40,8 +40,10 @@ public:
     ~Database();
 
     void close();
-
     bool isOpen();
+
+private:
+    QString connection_name;
 };
 
 #endif // DATABASE_H
