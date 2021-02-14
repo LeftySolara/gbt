@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/migrations">
         <file alias="000">migrations/000_initialize_db.sql</file>
+        <file alias="001">migrations/001_create_table_game.sql</file>
     </qresource>
 </RCC>

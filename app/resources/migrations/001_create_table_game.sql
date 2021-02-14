@@ -1,0 +1,11 @@
+PRAGMA foreign_keys = off;
+
+DROP TABLE IF EXISTS game;
+
+CREATE TABLE game (
+    id    INTEGER CONSTRAINT game_pk PRIMARY KEY ASC ON CONFLICT ROLLBACK AUTOINCREMENT,
+    title TEXT    CONSTRAINT game_not_null NOT NULL ON CONFLICT ROLLBACK
+);
+
+PRAGMA foreign_keys = on;
+PRAGMA user_version = 1;
