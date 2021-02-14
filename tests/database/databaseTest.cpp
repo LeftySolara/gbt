@@ -55,7 +55,7 @@ void databaseTest::test_databaseCustomPath()
 void databaseTest::test_runMigration()
 {
     Database db = Database(dir_path + "/test_runMigration.sqlite3");
-    db.update_schema(1);
+    db.update_schema();
     QVERIFY(db.schemaVersion() == 1);
     db.close();
 }

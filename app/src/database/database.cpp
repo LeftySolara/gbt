@@ -123,26 +123,29 @@ bool Database::run_migration(const QString &script_path) const
 
 /**
  * @brief Updates the database schema to the spedified version.
- * @param version The version to update the database schema to.
+ * @param version The version to update the database schema to, or -1 for the latest.
  */
-void Database::update_schema(const unsigned int &version) const
+void Database::update_schema(const int &version) const
 {
-    unsigned int current_schema_version = schemaVersion();
-    if (current_schema_version > version) {
+    int current_schema_version = schemaVersion();
+    if (version >= 0 && current_schema_version > version) {
         return;
     }
 
     QStringList migrations =
             QDir(migration_prefix).entryList(QDir::NoFilter, QDir::Name | QDir::IgnoreCase);
 
+    const int target_version = (version == -1) ? migrations.size() - 1 : version;
     bool success = true;
-    for (unsigned int i = current_schema_version + 1; i <= version; ++i) {
+
+    for (int i = current_schema_version + 1; i <= target_version; ++i) {
         if (!run_migration(":/migrations/" + migrations[i])) {
             qCritical(LOG_GBT) << "Unable to run migration.";
             success = false;
             break;
         }
     }
+
     if (!success) {
         QSqlDatabase db = QSqlDatabase::database();
         qCCritical(LOG_GBT) << db.lastError().text();

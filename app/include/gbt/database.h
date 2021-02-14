@@ -44,7 +44,7 @@ public:
     void close();
 
     bool run_migration(const QString &script_path) const;
-    void update_schema(const unsigned int &version) const;
+    void update_schema(const int &version = -1) const;
 
     bool isOpen();
     unsigned int schemaVersion() const;
