@@ -1,5 +1,5 @@
 /******************************************************************************
- * gametablemodel.h : Editable data model for the game table
+ * library.h : Object for managing the user's game library
  * ****************************************************************************
  * Copyright (C) 2021 Jalen Adams
  *
@@ -21,28 +21,22 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef GAMETABLEMODEL_H
-#define GAMETABLEMODEL_H
+#ifndef LIBRARY_H
+#define LIBRARY_H
 
-#include <QSqlRelationalTableModel>
+#include <QScopedPointer>
+#include "database/gametablemodel.h"
 
-
-class GameTableModel : public QSqlRelationalTableModel
+class Library
 {
-    Q_OBJECT
-
 public:
-    explicit GameTableModel(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    Library();
 
-    bool addGame(const QString title) const;
+    bool addGame(QString title);
 
 private:
-    bool gameExists(const QString title) const;
-
-    int getGameID(const QString title) const;
-    int getNextGameID() const;
+    QScopedPointer<GameTableModel> game_table_model_ptr;
 };
 
-#endif // GAMETABLEMODEL_H
+
+#endif // LIBRARY_H

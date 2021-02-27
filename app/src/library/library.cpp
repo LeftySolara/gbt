@@ -1,5 +1,5 @@
 /******************************************************************************
- * gametablemodel.h : Editable data model for the game table
+ * library.cpp : Object for managing the user's game library
  * ****************************************************************************
  * Copyright (C) 2021 Jalen Adams
  *
@@ -21,28 +21,27 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef GAMETABLEMODEL_H
-#define GAMETABLEMODEL_H
+#include "gbt/library.h"
+#include "gbt/log.h"
 
-#include <QSqlRelationalTableModel>
-
-
-class GameTableModel : public QSqlRelationalTableModel
+/**
+ * @brief Constructs a new Library instance.
+ */
+Library::Library()
 {
-    Q_OBJECT
+    game_table_model_ptr.reset(new GameTableModel());
+}
 
-public:
-    explicit GameTableModel(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-
-    bool addGame(const QString title) const;
-
-private:
-    bool gameExists(const QString title) const;
-
-    int getGameID(const QString title) const;
-    int getNextGameID() const;
-};
-
-#endif // GAMETABLEMODEL_H
+/**
+ * @brief Adds a new game to the library.
+ * @param title The title of the game.
+ * @return true if the game is added successfuly, false otherwise
+ */
+bool Library::addGame(QString title)
+{
+    if (!game_table_model_ptr->addGame(title)) {
+        qCWarning(LOG_GBT) << "ERROR: Unable to add game to library.";
+        return false;
+    }
+    return true;
+}
