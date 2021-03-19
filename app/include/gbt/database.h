@@ -1,7 +1,7 @@
 /******************************************************************************
- * log.h : Functions for outputting log messages
+ * database.h : Functions for managing the application database
  * ****************************************************************************
- * Copyright (C) 2020 Jalen Adams
+ * Copyright (C) 2021 Jalen Adams
  *
  * Authors: Jalen Adams <jalen@jalenkadams.me>
  *
@@ -21,27 +21,36 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#ifndef DATABASE_H
+#define DATABASE_H
 
-#include <QtWidgets/QApplication>
-#include <QLoggingCategory>
-#include <QMap>
+#include <QSqlDatabase>
+#include <QStandardPaths>
 
-Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
+static const QString default_db_path =
+        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/gbt/gbt.sqlite3";
 
-namespace Log {
-static QString log_path;
+static const QString migration_prefix = ":/migrations";
 
-static const QMap<QtMsgType, QString> msg_type_str = { { QtDebugMsg, "DEBUG" },
-                                                       { QtInfoMsg, "INFO" },
-                                                       { QtWarningMsg, "WARN" },
-                                                       { QtCriticalMsg, "CRITICAL" },
-                                                       { QtFatalMsg, "FATAL" } };
+/**
+ * @brief Wrapper for SQLite database interactions.
+ */
+class Database
+{
+public:
+    Database(const QString db_path = default_db_path);
+    ~Database();
 
-bool initLogging();
-void endLogging();
-void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-}
+    void close();
 
-#endif // LOG_H
+    bool run_migration(const QString &script_path) const;
+    void update_schema(const int &version = -1) const;
+
+    bool isOpen();
+    unsigned int schemaVersion() const;
+
+private:
+    QString connection_name;
+};
+
+#endif // DATABASE_H

@@ -12,7 +12,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = gbt
 TEMPLATE = app
 CONFIG += c++17
-VERSION = 0.1
+VERSION = 0.0.1
 
 DEFINES += APP_VERSION\\\"$VERSION\\\"
 DEFINES += QT_DEPRECATED_WARNINGS
@@ -24,18 +24,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += src include
 
 SOURCES += \
+    src/database/database.cpp \
+    src/database/gametablemodel.cpp \
+    src/library/library.cpp \
     src/main.cpp \
     src/log/log.cpp \
     src/ui/mainwindow.cpp
 
 HEADERS += \
+    include/gbt/database.h \
+    include/gbt/library.h \
     include/gbt/log.h \
+    src/database/gametablemodel.h \
     src/ui/mainwindow.h
 
 FORMS += \
     src/ui/mainwindow.ui
 
+RESOURCES += \
+    resources/resources.qrc
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+

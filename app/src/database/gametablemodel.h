@@ -1,7 +1,7 @@
 /******************************************************************************
- * log.h : Functions for outputting log messages
+ * gametablemodel.h : Editable data model for the game table
  * ****************************************************************************
- * Copyright (C) 2020 Jalen Adams
+ * Copyright (C) 2021 Jalen Adams
  *
  * Authors: Jalen Adams <jalen@jalenkadams.me>
  *
@@ -21,27 +21,28 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#ifndef GAMETABLEMODEL_H
+#define GAMETABLEMODEL_H
 
-#include <QtWidgets/QApplication>
-#include <QLoggingCategory>
-#include <QMap>
+#include <QSqlRelationalTableModel>
 
-Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
 
-namespace Log {
-static QString log_path;
+class GameTableModel : public QSqlRelationalTableModel
+{
+    Q_OBJECT
 
-static const QMap<QtMsgType, QString> msg_type_str = { { QtDebugMsg, "DEBUG" },
-                                                       { QtInfoMsg, "INFO" },
-                                                       { QtWarningMsg, "WARN" },
-                                                       { QtCriticalMsg, "CRITICAL" },
-                                                       { QtFatalMsg, "FATAL" } };
+public:
+    explicit GameTableModel(QObject *parent = nullptr, QSqlDatabase db = QSqlDatabase());
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-bool initLogging();
-void endLogging();
-void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-}
+    bool addGame(const QString title) const;
 
-#endif // LOG_H
+private:
+    bool gameExists(const QString title) const;
+
+    int getGameID(const QString title) const;
+    int getNextGameID() const;
+};
+
+#endif // GAMETABLEMODEL_H

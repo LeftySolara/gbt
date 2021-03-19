@@ -1,3 +1,4 @@
 TEMPLATE = subdirs
 SUBDIRS = app \
-    tests/settings
+    tests/settings \
+    tests/database

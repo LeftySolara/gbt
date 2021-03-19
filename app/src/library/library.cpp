@@ -1,7 +1,7 @@
 /******************************************************************************
- * log.h : Functions for outputting log messages
+ * library.cpp : Object for managing the user's game library
  * ****************************************************************************
- * Copyright (C) 2020 Jalen Adams
+ * Copyright (C) 2021 Jalen Adams
  *
  * Authors: Jalen Adams <jalen@jalenkadams.me>
  *
@@ -21,27 +21,27 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#include "gbt/library.h"
+#include "gbt/log.h"
 
-#include <QtWidgets/QApplication>
-#include <QLoggingCategory>
-#include <QMap>
-
-Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
-
-namespace Log {
-static QString log_path;
-
-static const QMap<QtMsgType, QString> msg_type_str = { { QtDebugMsg, "DEBUG" },
-                                                       { QtInfoMsg, "INFO" },
-                                                       { QtWarningMsg, "WARN" },
-                                                       { QtCriticalMsg, "CRITICAL" },
-                                                       { QtFatalMsg, "FATAL" } };
-
-bool initLogging();
-void endLogging();
-void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+/**
+ * @brief Constructs a new Library instance.
+ */
+Library::Library()
+{
+    game_table_model_ptr.reset(new GameTableModel());
 }
 
-#endif // LOG_H
+/**
+ * @brief Adds a new game to the library.
+ * @param title The title of the game.
+ * @return true if the game is added successfuly, false otherwise
+ */
+bool Library::addGame(QString title)
+{
+    if (!game_table_model_ptr->addGame(title)) {
+        qCWarning(LOG_GBT) << "ERROR: Unable to add game to library.";
+        return false;
+    }
+    return true;
+}

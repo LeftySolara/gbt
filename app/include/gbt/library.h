@@ -1,7 +1,7 @@
 /******************************************************************************
- * log.h : Functions for outputting log messages
+ * library.h : Object for managing the user's game library
  * ****************************************************************************
- * Copyright (C) 2020 Jalen Adams
+ * Copyright (C) 2021 Jalen Adams
  *
  * Authors: Jalen Adams <jalen@jalenkadams.me>
  *
@@ -21,27 +21,22 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#ifndef LIBRARY_H
+#define LIBRARY_H
 
-#include <QtWidgets/QApplication>
-#include <QLoggingCategory>
-#include <QMap>
+#include <QScopedPointer>
+#include "database/gametablemodel.h"
 
-Q_DECLARE_LOGGING_CATEGORY(LOG_GBT);
+class Library
+{
+public:
+    Library();
 
-namespace Log {
-static QString log_path;
+    bool addGame(QString title);
 
-static const QMap<QtMsgType, QString> msg_type_str = { { QtDebugMsg, "DEBUG" },
-                                                       { QtInfoMsg, "INFO" },
-                                                       { QtWarningMsg, "WARN" },
-                                                       { QtCriticalMsg, "CRITICAL" },
-                                                       { QtFatalMsg, "FATAL" } };
+private:
+    QScopedPointer<GameTableModel> game_table_model_ptr;
+};
 
-bool initLogging();
-void endLogging();
-void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
-}
 
-#endif // LOG_H
+#endif // LIBRARY_H
