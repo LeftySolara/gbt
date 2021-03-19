@@ -33,6 +33,14 @@ Library::Library()
 }
 
 /**
+ * @brief Gets the database model of the library.
+ */
+GameTableModel *Library::getModel() const
+{
+    return game_table_model_ptr.get();
+}
+
+/**
  * @brief Adds a new game to the library.
  * @param title The title of the game.
  * @return true if the game is added successfuly, false otherwise

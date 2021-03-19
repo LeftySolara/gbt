@@ -25,6 +25,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTableView>
+
+#include "gbt/library.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -46,5 +49,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QScopedPointer<QTableView> library_table_view;
+
+    QScopedPointer<Library> library_ptr;
 };
 #endif // MAINWINDOW_H

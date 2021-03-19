@@ -21,6 +21,7 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
+#include "gbt/database.h"
 #include "gbt/log.h"
 
 #include "mainwindow.h"
@@ -29,6 +30,13 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    library_ptr.reset(new Library());
+
+    library_table_view.reset(ui->libraryTableView);
+    library_table_view->setModel(library_ptr->getModel());
+    library_table_view->resizeRowsToContents();
+    library_table_view->resizeColumnsToContents();
 }
 
 MainWindow::~MainWindow()

@@ -32,6 +32,8 @@ class Library
 public:
     Library();
 
+    GameTableModel *getModel() const;
+
     bool addGame(QString title);
 
 private:
