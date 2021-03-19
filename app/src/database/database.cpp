@@ -28,7 +28,7 @@
 #include "gbt/database.h"
 #include "gbt/log.h"
 
-Database::Database(const QString db_path)
+void Database::open(const QString db_path)
 {
     // If the default connection already exists, remove it
     // to allow for updating the file path if necessary.
@@ -56,12 +56,6 @@ Database::Database(const QString db_path)
     }
 }
 
-Database::~Database()
-{
-    close();
-    QSqlDatabase::removeDatabase(connection_name);
-}
-
 /**
  * @brief Closes the active database connection.
  */
@@ -76,7 +70,7 @@ void Database::close()
  * @param script_path Path to the SQL script containing migration commands.
  * @return true if the migration runs successfully, false otherwise
  */
-bool Database::run_migration(const QString &script_path) const
+bool Database::run_migration(const QString &script_path)
 {
     QFile script(script_path);
     if (!script.open(QIODevice::ReadOnly)) {
@@ -125,7 +119,7 @@ bool Database::run_migration(const QString &script_path) const
  * @brief Updates the database schema to the spedified version.
  * @param version The version to update the database schema to, or -1 for the latest.
  */
-void Database::update_schema(const int &version) const
+void Database::update_schema(const int &version)
 {
     int current_schema_version = schemaVersion();
     if (version >= 0 && current_schema_version > version) {
@@ -166,7 +160,7 @@ bool Database::isOpen()
  * @brief Gets the current version of the database schema.
  * @return The schema version number.
  */
-unsigned int Database::schemaVersion() const
+unsigned int Database::schemaVersion()
 {
     QSqlQuery query("PRAGMA user_version");
     query.next();

@@ -27,30 +27,25 @@
 #include <QSqlDatabase>
 #include <QStandardPaths>
 
-static const QString default_db_path =
-        QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/gbt/gbt.sqlite3";
-
-static const QString migration_prefix = ":/migrations";
-
-/**
- * @brief Wrapper for SQLite database interactions.
- */
-class Database
+namespace Database
 {
-public:
-    Database(const QString db_path = default_db_path);
-    ~Database();
+    namespace
+    {
+        QString connection_name;
 
+        static const QString migration_prefix = ":/migrations";
+        static const QString default_db_path =
+                QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/gbt/gbt.sqlite3";
+    }
+
+    void open(const QString db_path = default_db_path);
     void close();
 
-    bool run_migration(const QString &script_path) const;
-    void update_schema(const int &version = -1) const;
+    bool run_migration(const QString &script_path);
+    void update_schema(const int &version = -1);
 
     bool isOpen();
-    unsigned int schemaVersion() const;
-
-private:
-    QString connection_name;
-};
+    unsigned int schemaVersion();
+}
 
 #endif // DATABASE_H

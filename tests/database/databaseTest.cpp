@@ -39,25 +39,25 @@ void databaseTest::cleanupTestCase() { }
 
 void databaseTest::test_databaseDefaultPath()
 {
-    Database db = Database();
+    Database::open();
 
-    QVERIFY(db.isOpen());
-    db.close();
+    QVERIFY(Database::isOpen());
+    Database::close();
 }
 
 void databaseTest::test_databaseCustomPath()
 {
-    Database db = Database(dir_path + "/test_db.sqlite3");
-    QVERIFY(db.isOpen());
-    db.close();
+    Database::open(dir_path + "/test_db.sqlite3");
+    QVERIFY(Database::isOpen());
+    Database::close();
 }
 
 void databaseTest::test_runMigration()
 {
-    Database db = Database(dir_path + "/test_runMigration.sqlite3");
-    db.update_schema();
-    QVERIFY(db.schemaVersion() == 1);
-    db.close();
+    Database::open(dir_path + "/test_runMigration.sqlite3");
+    Database::update_schema();
+    QVERIFY(Database::schemaVersion() == 1);
+    Database::close();
 }
 
 QTEST_APPLESS_MAIN(databaseTest)
