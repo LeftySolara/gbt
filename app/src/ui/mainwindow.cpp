@@ -31,6 +31,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
 
+    Database::open();
+    if (!Database::isOpen()) {
+        qCCritical(LOG_GBT) << "Unable to open database.";
+    }
+
     library_ptr.reset(new Library());
 
     library_table_view.reset(ui->libraryTableView);
@@ -42,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     delete ui;
+    Database::close();
 }
 
 /**

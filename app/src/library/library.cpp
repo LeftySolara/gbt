@@ -30,6 +30,8 @@
 Library::Library()
 {
     game_table_model_ptr.reset(new GameTableModel());
+    game_table_model_ptr->setTable("game");
+    game_table_model_ptr->select();
 }
 
 /**
