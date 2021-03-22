@@ -53,6 +53,7 @@ void Database::open(const QString db_path)
     }
     if (first_run) {
         run_migration(migration_prefix + "/000");
+        update_schema(-1);
     }
 }
 
