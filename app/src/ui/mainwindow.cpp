@@ -58,6 +58,19 @@ MainWindow::~MainWindow()
 }
 
 /**
+  * @brief Displays actions in a context menu.
+  **/
+#ifndef QT_NO_CONTEXTMENU
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu menu(this);
+    menu.addAction(ui->actionAddGame);
+    menu.addAction(ui->actionRemoveGame);
+    menu.exec(event->globalPos());
+}
+#endif // QT_NO_CONTEXTMENU
+
+/**
  * @brief Exits the application.
  */
 void MainWindow::quit()
