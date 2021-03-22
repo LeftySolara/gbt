@@ -39,12 +39,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     library_ptr.reset(new Library());
 
-    library_table_view.reset(ui->libraryTableView);
-    library_table_view->setModel(library_ptr->getModel());
-    library_table_view->resizeRowsToContents();
-    library_table_view->resizeColumnsToContents();
+    library_table_view_ptr.reset(ui->libraryTableView);
+    library_table_view_ptr->setModel(library_ptr->getModel());
+    library_table_view_ptr->resizeRowsToContents();
+    library_table_view_ptr->resizeColumnsToContents();
 
-    connect(ui->action_AddGame, &QAction::triggered, this, &MainWindow::showDialogAddGame);
+    connect(ui->actionAboutQt, &QAction::triggered, this, &MainWindow::showAboutQt);
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quit);
+    connect(ui->actionAddGame, &QAction::triggered, this, &MainWindow::showDialogAddGame);
 }
 
 MainWindow::~MainWindow()
@@ -56,7 +58,7 @@ MainWindow::~MainWindow()
 /**
  * @brief Exits the application.
  */
-void MainWindow::on_actionQuit_triggered()
+void MainWindow::quit()
 {
     qCDebug(LOG_GBT) << "Exit request received. Closing application...";
     QApplication::exit();
@@ -65,7 +67,7 @@ void MainWindow::on_actionQuit_triggered()
 /**
  * @brief Displays the "About Qt" dialog.
  */
-void MainWindow::on_actionAbout_Qt_triggered()
+void MainWindow::showAboutQt()
 {
     QApplication::aboutQt();
 }
@@ -81,6 +83,6 @@ void MainWindow::showDialogAddGame()
         return;
     }
 
-    QString title = dialog.lineEdit_title_ptr->text();
+    QString title = dialog.line_edit_title_ptr->text();
     library_ptr->addGame(title);
 }

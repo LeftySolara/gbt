@@ -41,7 +41,7 @@ public:
     explicit DialogAddGame(QWidget *parent = nullptr);
     ~DialogAddGame();
 
-    QScopedPointer<QLineEdit> lineEdit_title_ptr;
+    QScopedPointer<QLineEdit> line_edit_title_ptr;
 
 private:
     Ui::DialogAddGame *ui;

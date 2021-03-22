@@ -45,14 +45,14 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
+    void quit();
+    void showAboutQt();
 
     void showDialogAddGame();
 
 private:
     Ui::MainWindow *ui;
-    QScopedPointer<QTableView> library_table_view;
+    QScopedPointer<QTableView> library_table_view_ptr;
 
     QScopedPointer<Library> library_ptr;
 };

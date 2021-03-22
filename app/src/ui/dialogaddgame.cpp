@@ -31,7 +31,7 @@ DialogAddGame::DialogAddGame(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    lineEdit_title_ptr.reset(ui->lineEdit_title);
+    line_edit_title_ptr.reset(ui->lineEdit_title);
 }
 
 DialogAddGame::~DialogAddGame()

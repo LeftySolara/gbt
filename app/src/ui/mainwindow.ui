@@ -39,13 +39,13 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_Qt"/>
+    <addaction name="actionAboutQt"/>
    </widget>
    <widget class="QMenu" name="menuLibrary">
     <property name="title">
      <string>Library</string>
     </property>
-    <addaction name="action_AddGame"/>
+    <addaction name="actionAddGame"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLibrary"/>
@@ -63,12 +63,12 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="actionAbout_Qt">
+  <action name="actionAboutQt">
    <property name="text">
     <string>About Qt...</string>
    </property>
   </action>
-  <action name="action_AddGame">
+  <action name="actionAddGame">
    <property name="text">
     <string>Add Game</string>
    </property>
