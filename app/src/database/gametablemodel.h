@@ -37,6 +37,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     bool addGame(const QString title) const;
+    bool removeGame(const unsigned int id) const;
 
 private:
     bool gameExists(const QString title) const;

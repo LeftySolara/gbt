@@ -21,6 +21,8 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
+#include <QMessageBox>
+
 #include "gbt/database.h"
 #include "gbt/log.h"
 #include "dialogaddgame.h"
@@ -46,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->actionAboutQt, &QAction::triggered, this, &MainWindow::showAboutQt);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(ui->actionAddGame, &QAction::triggered, this, &MainWindow::showDialogAddGame);
+    connect(ui->actionRemoveGame, &QAction::triggered, this, &MainWindow::removeGame);
 }
 
 MainWindow::~MainWindow()
@@ -84,6 +87,29 @@ void MainWindow::showDialogAddGame()
 
     QString title = dialog.line_edit_title_ptr->text();
     library_ptr->addGame(title);
+    refreshLibraryView();
+}
+
+/**
+ * @brief Removes the currently selected game from the library.
+ */
+void MainWindow::removeGame()
+{
+    QModelIndex index = library_table_view_ptr->selectionModel()->currentIndex();
+    QString game_title = index.sibling(index.row(), 1).data().toString();
+
+    QMessageBox msg_box;
+    msg_box.setInformativeText("Remove \"" + game_title + "\" from library?");
+    msg_box.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msg_box.setDefaultButton(QMessageBox::No);
+
+    int rc = msg_box.exec();
+    if (rc == QMessageBox::No) {
+        return;
+    }
+
+    const unsigned int game_id = index.sibling(index.row(), 0).data().toUInt();
+    library_ptr->removeGame(game_id);
     refreshLibraryView();
 }
 

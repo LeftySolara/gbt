@@ -55,3 +55,17 @@ bool Library::addGame(QString title)
     }
     return true;
 }
+
+/**
+ * @brief Removes a game from the library.
+ * @param id The ID of the game to remove.
+ * @return true if the game is removed successfully, false otherwise.
+ */
+bool Library::removeGame(const unsigned int id)
+{
+    if (!game_table_model_ptr->removeGame(id)) {
+        qCWarning(LOG_GBT) << "ERROR: Unable to remove game from library.";
+        return false;
+    }
+    return true;
+}

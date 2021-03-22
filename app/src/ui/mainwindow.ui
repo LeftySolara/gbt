@@ -16,7 +16,14 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QTableView" name="libraryTableView"/>
+     <widget class="QTableView" name="libraryTableView">
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -46,6 +53,7 @@
      <string>Library</string>
     </property>
     <addaction name="actionAddGame"/>
+    <addaction name="actionRemoveGame"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuLibrary"/>
@@ -71,6 +79,11 @@
   <action name="actionAddGame">
    <property name="text">
     <string>Add Game</string>
+   </property>
+  </action>
+  <action name="actionRemoveGame">
+   <property name="text">
+    <string>Remove Game</string>
    </property>
   </action>
  </widget>

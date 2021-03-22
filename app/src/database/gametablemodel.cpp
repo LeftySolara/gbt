@@ -75,6 +75,18 @@ bool GameTableModel::addGame(const QString title) const
 }
 
 /**
+ * @brief Removes a game from the database.
+ * @param id The database ID of the game.
+ * @return true if the game is removed successfully, false otherwise.
+ */
+bool GameTableModel::removeGame(const unsigned int id) const
+{
+    QSqlQuery query(database());
+    const QString query_str = QString("DELETE FROM game WHERE id = ('%1')").arg(id);
+    return query.exec(query_str);
+}
+
+/**
  * @brief Determines if a game exists in the database.
  * @param title The title of the game.
  * @return true if the game is in the database, false otherwise.

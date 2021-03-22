@@ -35,6 +35,7 @@ public:
     GameTableModel *getModel() const;
 
     bool addGame(QString title);
+    bool removeGame(const unsigned int id);
 
 private:
     QScopedPointer<GameTableModel> game_table_model_ptr;

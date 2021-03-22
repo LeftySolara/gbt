@@ -49,6 +49,7 @@ private slots:
     void showAboutQt();
 
     void showDialogAddGame();
+    void removeGame();
 
 private:
     void refreshLibraryView();
