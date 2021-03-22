@@ -58,6 +58,7 @@ private slots:
     void removeGame();
 
 private:
+    void setupActions();
     void refreshLibraryView();
 
     Ui::MainWindow *ui;

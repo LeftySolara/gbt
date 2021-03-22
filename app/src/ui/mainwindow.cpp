@@ -45,10 +45,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     library_table_view_ptr->setModel(library_ptr->getModel());
     refreshLibraryView();
 
-    connect(ui->actionAboutQt, &QAction::triggered, this, &MainWindow::showAboutQt);
-    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quit);
-    connect(ui->actionAddGame, &QAction::triggered, this, &MainWindow::showDialogAddGame);
-    connect(ui->actionRemoveGame, &QAction::triggered, this, &MainWindow::removeGame);
+    setupActions();
 }
 
 MainWindow::~MainWindow()
@@ -124,6 +121,17 @@ void MainWindow::removeGame()
     const unsigned int game_id = index.sibling(index.row(), 0).data().toUInt();
     library_ptr->removeGame(game_id);
     refreshLibraryView();
+}
+
+/**
+ * @brief Sets up the actions for signals and slots.
+ */
+void MainWindow::setupActions()
+{
+    connect(ui->actionAboutQt, &QAction::triggered, this, &MainWindow::showAboutQt);
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quit);
+    connect(ui->actionAddGame, &QAction::triggered, this, &MainWindow::showDialogAddGame);
+    connect(ui->actionRemoveGame, &QAction::triggered, this, &MainWindow::removeGame);
 }
 
 /**
