@@ -41,8 +41,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     library_table_view_ptr.reset(ui->libraryTableView);
     library_table_view_ptr->setModel(library_ptr->getModel());
-    library_table_view_ptr->resizeRowsToContents();
-    library_table_view_ptr->resizeColumnsToContents();
+    refreshLibraryView();
 
     connect(ui->actionAboutQt, &QAction::triggered, this, &MainWindow::showAboutQt);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quit);
@@ -85,4 +84,15 @@ void MainWindow::showDialogAddGame()
 
     QString title = dialog.line_edit_title_ptr->text();
     library_ptr->addGame(title);
+    refreshLibraryView();
+}
+
+/**
+ * @brief Updates the TableView with changes made to the database mode.
+ */
+void MainWindow::refreshLibraryView()
+{
+    library_ptr->getModel()->select();
+    library_table_view_ptr->resizeRowsToContents();
+    library_table_view_ptr->resizeColumnsToContents();
 }

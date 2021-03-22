@@ -51,9 +51,12 @@ private slots:
     void showDialogAddGame();
 
 private:
+    void refreshLibraryView();
+
     Ui::MainWindow *ui;
     QScopedPointer<QTableView> library_table_view_ptr;
 
     QScopedPointer<Library> library_ptr;
+
 };
 #endif // MAINWINDOW_H
