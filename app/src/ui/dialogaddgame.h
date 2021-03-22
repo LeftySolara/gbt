@@ -1,5 +1,5 @@
 /******************************************************************************
- * mainwindow.h : The main UI window
+ * dialogaddgame.h : Dialog window for entering new game information.
  * ****************************************************************************
  * Copyright (C) 2020 Jalen Adams
  *
@@ -21,39 +21,30 @@
  * along with gbt.  If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
-#include <QAction>
-#include <QMainWindow>
-#include <QTableView>
+#ifndef DIALOGADDGAME_H
+#define DIALOGADDGAME_H
 
-#include "gbt/library.h"
+#include <QDialog>
+#include <QLineEdit>
+#include <QScopedPointer>
 
-QT_BEGIN_NAMESPACE
 namespace Ui {
-class MainWindow;
+class DialogAddGame;
 }
-QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class DialogAddGame : public QDialog
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit DialogAddGame(QWidget *parent = nullptr);
+    ~DialogAddGame();
 
-private slots:
-    void on_actionQuit_triggered();
-    void on_actionAbout_Qt_triggered();
-
-    void showDialogAddGame();
+    QScopedPointer<QLineEdit> lineEdit_title_ptr;
 
 private:
-    Ui::MainWindow *ui;
-    QScopedPointer<QTableView> library_table_view;
-
-    QScopedPointer<Library> library_ptr;
+    Ui::DialogAddGame *ui;
 };
-#endif // MAINWINDOW_H
+
+#endif // DIALOGADDGAME_H

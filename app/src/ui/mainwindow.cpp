@@ -23,6 +23,7 @@
 
 #include "gbt/database.h"
 #include "gbt/log.h"
+#include "dialogaddgame.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -42,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     library_table_view->setModel(library_ptr->getModel());
     library_table_view->resizeRowsToContents();
     library_table_view->resizeColumnsToContents();
+
+    connect(ui->action_AddGame, &QAction::triggered, this, &MainWindow::showDialogAddGame);
 }
 
 MainWindow::~MainWindow()
@@ -65,4 +68,19 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::on_actionAbout_Qt_triggered()
 {
     QApplication::aboutQt();
+}
+
+/**
+ * @brief Displays the "Add Game" dialog.
+ */
+void MainWindow::showDialogAddGame()
+{
+    DialogAddGame dialog = DialogAddGame();
+
+    if (!dialog.exec()) {
+        return;
+    }
+
+    QString title = dialog.lineEdit_title_ptr->text();
+    library_ptr->addGame(title);
 }

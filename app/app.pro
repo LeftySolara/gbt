@@ -29,6 +29,7 @@ SOURCES += \
     src/library/library.cpp \
     src/main.cpp \
     src/log/log.cpp \
+    src/ui/dialogaddgame.cpp \
     src/ui/mainwindow.cpp
 
 HEADERS += \
@@ -36,9 +37,11 @@ HEADERS += \
     include/gbt/library.h \
     include/gbt/log.h \
     src/database/gametablemodel.h \
+    src/ui/dialogaddgame.h \
     src/ui/mainwindow.h
 
 FORMS += \
+    src/ui/dialogaddgame.ui \
     src/ui/mainwindow.ui
 
 RESOURCES += \
